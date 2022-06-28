@@ -3,9 +3,13 @@ get_feature_values <- function(features, rt_colname) {
     chr <- c()
     lab <- c()
     for (i in 1:length(features)) {
+        # select one feature table
         features_batch <- dplyr::as_tibble(features[[i]])
+        # select mz
         mz <- c(mz, features_batch$mz)
+        # select rt
         chr <- c(chr, features_batch[[rt_colname]])
+        # add batch identifier
         lab <- c(lab, rep(i, nrow(features_batch)))
     }
     return(list(mz = mz, chr = chr, lab = lab))

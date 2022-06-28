@@ -33,10 +33,11 @@ feature.align <- function(features,
     number_of_samples <- nrow(summary(features))
     if (number_of_samples > 1) {
         values <- get_feature_values(features, rt_colname)
-        mz_values <- values$mz
-        chr <- values$chr
-        lab <- values$lab
+        mz_values <- values$mz  # vector of m/z values from all samples
+        chr <- values$chr       # same for rt
+        lab <- values$lab       # sample identifiers
         
+        # sort all values by mz, if equal by rt
         o <- order(mz_values, chr)
         mz_values <- mz_values[o]
         chr <- chr[o]
@@ -76,6 +77,7 @@ feature.align <- function(features,
         message(paste("m/z tolerance level: ", mz_tol_relative))
         message(paste("time tolerance level:", rt_tol_relative))
         
+        # create zero vectors of length number_of_samples + 4 ?
         aligned.ftrs <- pk.times <- rep(0, 4 + number_of_samples)
         mz.sd.rec <- 0
         
@@ -87,22 +89,35 @@ feature.align <- function(features,
         sizes <- c(0, cumsum(sapply(features, nrow)))
         for (i in 1:number_of_samples) {
             this <- features[[i]]
+            # select values belonging to this batch/sample
             sel <- which(all.ft$lab == i)
+            # all.ft values are already grouped by m/z and rt tolerances *
             that <- cbind(all.ft$mz[sel], all.ft$chr[sel], all.ft$grps[sel])
-            this <- this[order(this[, 1], this[, 2]),]
+            # order by m/z then by rt
+            this <- this[order(this[, 1], this[, 2]),] # this can go 2 lines higher
+            # *but here we sort them again?
             that <- that[order(that[, 1], that[, 2]),]
+            # aren't this and that identical on the m/z and rt columns???
             
+            # update m/z values with ordered ones
             mz_values[(sizes[i] + 1):sizes[i + 1]] <- this[, 1]
+            # assign rt
             chr[(sizes[i] + 1):sizes[i + 1]] <- this[, 2]
+            # assign area
             area[(sizes[i] + 1):sizes[i + 1]] <- this[, 5]
+            # assign row identifier
             grps[(sizes[i] + 1):sizes[i + 1]] <- that[, 3]
+            # assign batch identifier
             lab[(sizes[i] + 1):sizes[i + 1]] <- i
         }
         
+        # table with number of values in a group
         ttt <- table(all.ft$grps)
+        # count those with minimal occurrence (times 3 ??)
         curr.row <- sum(ttt >= min_occurrence) * 3
         mz.sd.rec <- rep(0, curr.row)
         
+        # names creates strings which are again converted to number?
         sel.labels <- as.numeric(names(ttt)[ttt >= min_occurrence])
         
         # retention time alignment
