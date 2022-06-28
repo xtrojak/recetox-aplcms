@@ -78,7 +78,7 @@ find.tol.time <- function(mz,
         # the estimated density values
         x <- des$x[des$x > 0]
         
-        # linear regression using uppermost part of data
+        # linear regression using uppermost (top 75%) part of data
         this.l <- lm(y[x > uppermost / 4] ~ x[x > uppermost / 4])
         # compute probability density values (y) using the linear function
         exp.y <- this.l$coef[1] + this.l$coef[2] * x
@@ -91,6 +91,7 @@ find.tol.time <- function(mz,
         y[1:(length(y) - 1)] <- y2
         
         # cumulative sum - where actual y is greater than calculated exp.y using regression?
+        # cutoff is selected where the density of the empirical distribution is >1.5 times the density of the distribution
         yy <- cumsum(y > 1.5 * exp.y)
         yi <- seq_along(yy)
         # find last index where y is greater than exp.y
