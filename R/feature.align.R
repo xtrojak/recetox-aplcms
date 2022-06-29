@@ -13,6 +13,7 @@ to_attach <- function(pick, number_of_samples, use = "sum") {
                 strengths[i] <- sum(pick[pick[, 6] == i, 5])
             if (use == "median")
                 # median of all areas from the same sample
+                # can be NA if pick does not contain data from a sample
                 strengths[i] <- median(pick[pick[, 6] == i, 5])
         }
         # average of m/z, average of rt, min of rt, max of rt, sum/median of areas
@@ -143,8 +144,6 @@ feature.align <- function(features,
                         # Kernel Density Estimation with target standard deviation 'mz_tol_relative' time median  of m/z
                         this.den <- density(this[, 1], bw = mz_tol_relative * median(this[, 1]))
                         # Finds the peaks and valleys of a smooth curve
-                        # for Gaussian distribution (default), isn't this straightforward?
-                        # always first, mid, last?
                         turns <- find.turn.point(this.den$y)
                         pks <- this.den$x[turns$pks]
                         vlys <- this.den$x[turns$vlys]
