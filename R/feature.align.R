@@ -1,15 +1,21 @@
 to_attach <- function(pick, number_of_samples, use = "sum") {
     strengths <- rep(0, number_of_samples)
     if (is.null(nrow(pick))) {
+        # this is very strange if it can ever happen
+        # maybe commas are missing? we want the same as below
+        # but also why if there are no rows...
         strengths[pick[6]] <- pick[5]
         return(c(pick[1], pick[2], pick[1], pick[1], strengths))
     } else {
         for (i in seq_along(strengths)) {
             if (use == "sum")
+                # sum of all areas from the same sample
                 strengths[i] <- sum(pick[pick[, 6] == i, 5])
             if (use == "median")
+                # median of all areas from the same sample
                 strengths[i] <- median(pick[pick[, 6] == i, 5])
         }
+        # average of m/z, average of rt, min of rt, max of rt, sum/median of areas
         return(c(mean(pick[, 1]), mean(pick[, 2]), min(pick[, 1]),
                  max(pick[, 1]), strengths))
     }
@@ -126,36 +132,57 @@ feature.align <- function(features,
                 if (i %% 100 == 0)
                     gc()
                 this.return <- NULL
+                # select a group
                 sel <- which(grps == sel.labels[i])
                 if (length(sel) > 1) {
+                    # selected data from the group
+                    # WHY 3 times rt??? are columns 3 and 4 even used? can be NA or removed...
                     this <- cbind(mz_values[sel], chr[sel], chr[sel], chr[sel], area[sel], lab[sel])
+                    # continue if data is from at least 'min_occurrence' samples
                     if (length(unique(this[, 6])) >= min_occurrence) {
+                        # Kernel Density Estimation with target standard deviation 'mz_tol_relative' time median  of m/z
                         this.den <- density(this[, 1], bw = mz_tol_relative * median(this[, 1]))
+                        # Finds the peaks and valleys of a smooth curve
+                        # for Gaussian distribution (default), isn't this straightforward?
+                        # always first, mid, last?
                         turns <- find.turn.point(this.den$y)
                         pks <- this.den$x[turns$pks]
                         vlys <- this.den$x[turns$vlys]
                         for (j in seq_along(pks)) {
+                            ### extract m/z selection
                             this.lower <- max(vlys[vlys < pks[j]])
                             this.upper <- min(vlys[vlys > pks[j]])
+                            # select data with m/z within lower and upper bound from density estimation
                             this.sel <- which(this[, 1] > this.lower & this[, 1] <= this.upper)
                             that <- this[this.sel, ]
                             if (!is.null(nrow(that))) {
+                                # continue if data is still from at least 'min_occurrence' samples
                                 if (length(unique(that[, 6])) >= min_occurrence) {
+                                    # Kernel Density Estimation, this time for retention time
                                     that.den <- density(that[, 2], bw = rt_tol_relative / 1.414)
+                                    # again select statistically significant points
                                     that.turns <- find.turn.point(that.den$y)
                                     that.pks <- that.den$x[that.turns$pks]
                                     that.vlys <- that.den$x[that.turns$vlys]
                                     for (k in seq_along(that.pks)) {
+                                        ### extract rt selection
                                         that.lower <- max(that.vlys[that.vlys < that.pks[k]])
                                         that.upper <- min(that.vlys[that.vlys > that.pks[k]])
+                                        # select data with rt within lower and upper bound from density estimation
                                         thee <- that[that[, 2] > that.lower & that[, 2] <= that.upper, ]
                                         if (!is.null(nrow(thee))) {
                                             if (length(unique(thee[, 6])) >= min_occurrence) {
+                                                # continue if data is still from at least 'min_occurrence' samples
                                                 this.return <-
                                                     c(to_attach(thee, number_of_samples, use = "sum"),
                                                       to_attach(thee[, c(1, 2, 3, 4, 2, 6)], number_of_samples, use = "median"),
                                                       sd(thee[, 1], na.rm = TRUE)
                                                     )
+                                                # vector of :
+                                                # average of m/z, average of rt, min of m/z, max of m/z, sum of areas per sample
+                                                # average of m/z, average of rt, min of m/z, max of m/z, median of rt per sample
+                                                # and standard deviation of m/z
+                                                # such vector is rbind-ed to resulting aligned.ftrs
                                             }
                                         }
                                     }
@@ -175,13 +202,18 @@ feature.align <- function(features,
                 this.return
             }
         
+        # select columns: average of m/z, average of rt, min of m/z, max of m/z, median of rt per sample (the second to_attach call)
         pk.times <- aligned.ftrs[, (5 + number_of_samples):(2 * (4 + number_of_samples))]
+        # select last column, i.e. standard deviation of m/z
         mz.sd.rec <- aligned.ftrs[, ncol(aligned.ftrs)]
+        # select columns: average of m/z, average of rt, min of m/z, max of m/z, sum of areas per sample (the first to_attach call)
         aligned.ftrs <- aligned.ftrs[, 1:(4 + number_of_samples)]
         
+        # rename columns on both tables, samples are called "exp_i"
         colnames(aligned.ftrs) <-
             colnames(pk.times) <- c("mz", "time", "mz.min", "mz.max", paste("exp", 1:number_of_samples))
         
+        # return both tables and both computed tolerances
         rec <- new("list")
         rec$aligned.ftrs <- aligned.ftrs
         rec$pk.times <- pk.times
