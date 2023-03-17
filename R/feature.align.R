@@ -9,13 +9,6 @@ create_empty_tibble <- function(number_of_samples, metadata_colnames, intensity_
 }
 
 
-add_row <- function(df, data, i, column_names) {
-    row <- matrix(c(i, data), nrow = 1)
-    colnames(row) <- column_names
-    return(dplyr::bind_rows(df, tibble::as_tibble(row)))
-}
-
-
 create_output <- function(sample_grouped, sample_names) {
     number_of_samples <- length(sample_names)
     intensity_row <- rep(0, number_of_samples)
