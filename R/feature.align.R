@@ -2,15 +2,15 @@
 
 create_empty_tibble <- function(number_of_samples, metadata_colnames, intensity_colnames, rt_colnames) {
     features <- new("list")
-    features$metadata <- tibble::as_tibble(matrix(nrow = 0, ncol = length(metadata_colnames)), .name_repair = ~ metadata_colnames)
-    features$intensity <- tibble::as_tibble(matrix(nrow = 0, ncol = length(intensity_colnames)), .name_repair = ~ intensity_colnames)
-    features$rt <- tibble::as_tibble(matrix(nrow = 0, ncol = length(rt_colnames)), .name_repair = ~ rt_colnames)
+    features$metadata <- tibble::as_tibble(matrix(nrow = 0, ncol = length(metadata_colnames)), .name_repair = ~metadata_colnames)
+    features$intensity <- tibble::as_tibble(matrix(nrow = 0, ncol = length(intensity_colnames)), .name_repair = ~intensity_colnames)
+    features$rt <- tibble::as_tibble(matrix(nrow = 0, ncol = length(rt_colnames)), .name_repair = ~rt_colnames)
     return(features)
 }
 
 
 add_row <- function(df, data, i, column_names) {
-    row <- matrix(c(i, data), nrow=1)
+    row <- matrix(c(i, data), nrow = 1)
     colnames(row) <- column_names
     return(dplyr::bind_rows(df, tibble::as_tibble(row)))
 }
@@ -21,7 +21,7 @@ create_output <- function(sample_grouped, sample_names) {
     intensity_row <- rep(0, number_of_samples)
     rt_row <- rep(0, number_of_samples)
     sample_presence <- rep(0, number_of_samples)
-    
+
     for (i in seq_along(intensity_row)) {
         filtered <- filter(sample_grouped, sample_id == sample_names[i])
         if (nrow(filtered) != 0) {
@@ -30,11 +30,11 @@ create_output <- function(sample_grouped, sample_names) {
             rt_row[i] <- median(filtered$rt)
         }
     }
-    
+
     mz <- sample_grouped$mz
     rt <- sample_grouped$rt
     metadata_row <- c(mean(mz), min(mz), max(mz), mean(rt), min(rt), max(rt), nrow(sample_grouped), sample_presence)
-    
+
     return(list(metadata_row = metadata_row, intensity_row = intensity_row, rt_row = rt_row))
 }
 
@@ -101,7 +101,7 @@ create_rows <- function(features,
     if (i %% 100 == 0) {
         gc()
     } # call Garbage Collection for performance improvement?
-    
+
     sample <- dplyr::filter(features, cluster == sel.labels[i])
     if (nrow(sample) > 1) {
         if (validate_contents(sample, min_occurrence)) {
@@ -113,6 +113,9 @@ create_rows <- function(features,
     return(NULL)
 }
 
+comb <- function(x, ...) {
+    mapply(tibble::as_tibble, (mapply(rbind, x, ..., SIMPLIFY = FALSE)))
+}
 
 #' Align peaks from spectra into a feature table.
 #'
@@ -132,21 +135,33 @@ create_aligned_feature_table <- function(features_table,
                                          sample_names,
                                          rt_tol_relative,
                                          mz_tol_relative) {
-    
+    cl <- get_num_workers()
+    if (!is(cl, "cluster")) {
+        cl <- parallel::makeCluster(cl)
+        on.exit(parallel::stopCluster(cl))
+    }
+
+    # NOTE: side effect (doParallel has no functionality to clean up)
+    doParallel::registerDoParallel(cl)
+    register_functions_to_cluster(cl)
+
     number_of_samples <- length(sample_names)
     metadata_colnames <- c("id", "mz", "mzmin", "mzmax", "rt", "rtmin", "rtmax", "npeaks", sample_names)
     intensity_colnames <- c("id", paste0(sample_names, "_intensity"))
     rt_colnames <- c("id", paste0(sample_names, "_rt"))
-    
+
     aligned_features <- create_empty_tibble(number_of_samples, metadata_colnames, intensity_colnames, rt_colnames)
-    
+
     # table with number of values per group
     groups_cardinality <- table(features_table$cluster)
     # count those with minimal occurrence
     sel.labels <- as.numeric(names(groups_cardinality)[groups_cardinality >= min_occurrence])
 
     # retention time alignment
-    for (i in seq_along(sel.labels)) {
+    aligned_features <- foreach::foreach(
+        i = seq_along(sel.labels), .combine = "comb",
+        .multicombine = TRUE, .inorder = TRUE
+    ) %dopar% {
         rows <- create_rows(
             features_table,
             i,
@@ -156,12 +171,19 @@ create_aligned_feature_table <- function(features_table,
             min_occurrence,
             sample_names
         )
-        
+
         if (!is.null(rows)) {
-            aligned_features$metadata <- add_row(aligned_features$metadata, rows$metadata_row, i, metadata_colnames)
-            aligned_features$intensity <- add_row(aligned_features$intensity, rows$intensity_row, i, intensity_colnames)
-            aligned_features$rt <- add_row(aligned_features$rt, rows$rt_row, i, rt_colnames)
+            rows$metadata_row <- c(i, rows$metadata_row)
+            rows$intensity_row <- c(i, rows$intensity_row)
+            rows$rt_row <- c(i, rows$rt_row)
         }
+
+        list(metadata = rows$metadata_row, intensity = rows$intensity_row, rt = rows$rt_row)
     }
+
+    colnames(aligned_features$metadata) <- metadata_colnames
+    colnames(aligned_features$intensity) <- intensity_colnames
+    colnames(aligned_features$rt) <- rt_colnames
+
     return(aligned_features)
 }
