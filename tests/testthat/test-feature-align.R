@@ -32,7 +32,8 @@ patrick::with_parameters_test_that(
         min_occurrence,
         files,
         res$rt_tol_relative,
-        res$mz_tol_relative
+        res$mz_tol_relative,
+        get_num_workers()
     )
     
     aligned_actual$mz_tol_relative <- res$mz_tol_relative
@@ -79,7 +80,8 @@ patrick::with_parameters_test_that(
         min_occurrence,
         files,
         rt_tol_relative,
-        mz_tol_relative
+        mz_tol_relative,
+        get_num_workers()
     )
 
     aligned_expected <- list(
