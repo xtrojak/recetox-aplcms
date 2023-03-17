@@ -120,6 +120,7 @@ comb <- function(x, ...) {
 #'  percentage of the m/z value. This value, multiplied by the m/z value, becomes the cutoff level.
 #' @param rt_tol_relative The retention time tolerance level for peak alignment. The default is NA, which
 #'  allows the program to search for the tolerance level based on the data.
+#' @param cluster The number of CPU cores to be used
 #' @return A tibble with three tables containing aligned metadata, intensities an RTs.
 #'
 #' @export
@@ -127,16 +128,16 @@ create_aligned_feature_table <- function(features_table,
                                          min_occurrence,
                                          sample_names,
                                          rt_tol_relative,
-                                         mz_tol_relative) {
-    cl <- get_num_workers()
-    if (!is(cl, "cluster")) {
-        cl <- parallel::makeCluster(cl)
-        on.exit(parallel::stopCluster(cl))
+                                         mz_tol_relative,
+                                         cluster = 4) {
+    if (!is(cluster, "cluster")) {
+        cluster <- parallel::makeCluster(cluster)
+        on.exit(parallel::stopCluster(cluster))
     }
 
     # NOTE: side effect (doParallel has no functionality to clean up)
-    doParallel::registerDoParallel(cl)
-    register_functions_to_cluster(cl)
+    doParallel::registerDoParallel(cluster)
+    register_functions_to_cluster(cluster)
 
     number_of_samples <- length(sample_names)
     metadata_colnames <- c("id", "mz", "mzmin", "mzmax", "rt", "rtmin", "rtmax", "npeaks", sample_names)
