@@ -45,7 +45,14 @@ register_functions_to_cluster <- function(cluster) {
         'span',
         'compute_uniq_grp',
         'predict_smoothed_rt',
-        'label_val_to_keep'
+        'label_val_to_keep',
+        "create_rows",
+        "validate_contents",
+        "select_mz",
+        "select_rt",
+        "find_optima",
+        "filter_based_on_density",
+        "create_output"
     ))
     snow::clusterEvalQ(cluster, library("dplyr"))
 }
