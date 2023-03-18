@@ -52,7 +52,8 @@ register_functions_to_cluster <- function(cluster) {
         "select_rt",
         "find_optima",
         "filter_based_on_density",
-        "create_output"
+        "create_output",
+        "comb"
     ))
     snow::clusterEvalQ(cluster, library("dplyr"))
 }
