@@ -8,7 +8,7 @@ create_empty_tibble <- function(number_of_samples, metadata_colnames, intensity_
     return(features)
 }
 
-
+#' @export
 create_output <- function(sample_grouped, sample_names) {
     number_of_samples <- length(sample_names)
     intensity_row <- rep(0, number_of_samples)
@@ -31,7 +31,7 @@ create_output <- function(sample_grouped, sample_names) {
     return(list(metadata_row = metadata_row, intensity_row = intensity_row, rt_row = rt_row))
 }
 
-
+#' @export
 validate_contents <- function(samples, min_occurrence) {
     # validate whether data is still from at least 'min_occurrence' number of samples
     if (!is.null(nrow(samples))) {
@@ -43,7 +43,7 @@ validate_contents <- function(samples, min_occurrence) {
     return(FALSE)
 }
 
-
+#' @export
 find_optima <- function(data, bandwidth) {
     # Kernel Density Estimation
     den <- density(data, bw = bandwidth)
@@ -52,7 +52,7 @@ find_optima <- function(data, bandwidth) {
     return(list(peaks = den$x[turns$pks], valleys = den$x[turns$vlys]))
 }
 
-
+#' @export
 filter_based_on_density <- function(sample, turns, index, i) {
     # select data within lower and upper bound from density estimation
     lower_bound <- max(turns$valleys[turns$valleys < turns$peaks[i]])
@@ -61,7 +61,7 @@ filter_based_on_density <- function(sample, turns, index, i) {
     return(sample[selected, ])
 }
 
-
+#' @export
 select_rt <- function(sample, rt_tol_relative, min_occurrence, sample_names) {
     turns <- find_optima(sample$rt, bandwidth = rt_tol_relative / 1.414)
     for (i in seq_along(turns$peaks)) {
@@ -72,7 +72,7 @@ select_rt <- function(sample, rt_tol_relative, min_occurrence, sample_names) {
     }
 }
 
-
+#' @export
 select_mz <- function(sample, mz_tol_relative, rt_tol_relative, min_occurrence, sample_names) {
     turns <- find_optima(sample$mz, bandwidth = mz_tol_relative * median(sample$mz))
     for (i in seq_along(turns$peaks)) {
@@ -83,7 +83,7 @@ select_mz <- function(sample, mz_tol_relative, rt_tol_relative, min_occurrence, 
     }
 }
 
-
+#' @export
 create_rows <- function(features,
                         i,
                         sel.labels,
@@ -106,6 +106,7 @@ create_rows <- function(features,
     return(NULL)
 }
 
+#' @export
 comb <- function(x, ...) {
     mapply(tibble::as_tibble, (mapply(rbind, x, ..., SIMPLIFY = FALSE)))
 }
@@ -153,8 +154,7 @@ create_aligned_feature_table <- function(features_table,
 
     # retention time alignment
     aligned_features <- foreach::foreach(
-        i = seq_along(sel.labels), .combine = "comb",
-        .multicombine = TRUE, .inorder = TRUE
+        i = seq_along(sel.labels), .combine = "comb", .multicombine = TRUE
     ) %dopar% {
         rows <- create_rows(
             features_table,
