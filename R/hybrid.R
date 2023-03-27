@@ -415,7 +415,8 @@ hybrid <- function(
       min_occurrence,
       sample_names,
       adjusted_clusters$rt_tol_relative,
-      adjusted_clusters$mz_tol_relative
+      adjusted_clusters$mz_tol_relative,
+      cluster
   )
 
   message("**** augmenting with known peaks ****")
@@ -494,7 +495,8 @@ hybrid <- function(
       min_occurrence,
       sample_names,
       adjusted_clusters$rt_tol_relative,
-      adjusted_clusters$mz_tol_relative
+      adjusted_clusters$mz_tol_relative,
+      cluster
   )
 
   message("**** augmenting known table ****")

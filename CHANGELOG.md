@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [dev] - unreleased
 ### Added
 ### Changed
+- introduced parallelism in feature.align [#182](https://github.com/RECETOX/recetox-aplcms/pull/182)
 ### Removed
 
 ## [0.10.2] - 2023-03-10

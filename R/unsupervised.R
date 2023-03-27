@@ -205,7 +205,8 @@ unsupervised <- function(
       min_occurrence,
       sample_names,
       adjusted_clusters$rt_tol_relative,
-      adjusted_clusters$mz_tol_relative
+      adjusted_clusters$mz_tol_relative,
+      cluster
   )
 
   message("**** weaker signal recovery ****")
@@ -251,7 +252,8 @@ unsupervised <- function(
       min_occurrence,
       sample_names,
       recovered_clusters$rt_tol_relative,
-      recovered_clusters$mz_tol_relative
+      recovered_clusters$mz_tol_relative,
+      cluster
   )
 
   aligned_feature_sample_table <- as_feature_sample_table(
