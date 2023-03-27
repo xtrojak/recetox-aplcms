@@ -1,10 +1,10 @@
 Package: recetox.aplcms
 Title: Adaptive processing of LC-MS data
-Version: 0.10.2
+Version: 0.10.3
 Date: 2020-06-16
 Authors@R: c(
     person("Tianwei", "Yu", email = "tianwei.Yu@emory.edu", role = "aut"),
-    person("Jiri", "Novotny", email = "409963@muni.cz", role = "cre"))
+    person("Helge", family="Hecht", email = "helge.hecht@recetox.muni.cz", role = "cre"))
 Description: This is a customized fork of the original work from Tianwei Yu.
         It takes the adaptive processing of LC/MS metabolomics data further
         with focus on high resolution MS for both LC and GC applications.
