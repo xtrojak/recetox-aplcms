@@ -54,8 +54,6 @@ increment_counter <- function(pointers, that.n){
 #' @param mz_tol m/z tolerance level for the grouping of data points. This value is expressed as the fraction of the m/z value. 
 #'  This value, multiplied by the m/z value, becomes the cutoff level. The recommended value is the machine's nominal accuracy 
 #'  level. Divide the ppm value by 1e6. For FTMS, 1e-5 is recommended.
-#' @param baseline_correct After grouping the observations, the highest intensity in each group is found. If the highest 
-#'  is lower than this value, the entire group will be deleted.
 #' @param intensity_weighted Whether to weight the local density by signal intensities.
 #' @return A list is returned.
 #' \itemize{
@@ -73,7 +71,6 @@ adaptive.bin <- function(features,
                          min_run,
                          min_pres,
                          mz_tol,
-                         baseline_correct,
                          intensity_weighted) {
   # order inputs after mz values
   features <- features |> dplyr::arrange_at("mz")

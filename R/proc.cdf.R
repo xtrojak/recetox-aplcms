@@ -17,7 +17,6 @@ load_data <- function(filename,
                       min_run,
                       min_pres,
                       mz_tol,
-                      baseline_correct,
                       intensity_weighted) {
   rawprof_filename <- paste(strsplit(tolower(filename), "\\.")[[1]][1], "_", min_run, "_", min_pres, "_", mz_tol, ".rawprof", sep = "")
 
@@ -30,7 +29,6 @@ load_data <- function(filename,
       min_run = min_run,
       min_pres = min_pres,
       mz_tol = mz_tol,
-      baseline_correct = baseline_correct,
       intensity_weighted = intensity_weighted
     )
   }
@@ -78,7 +76,6 @@ proc.cdf <- function(filename,
     min_run,
     min_pres,
     mz_tol,
-    baseline_correct,
     intensity_weighted
   )
 
