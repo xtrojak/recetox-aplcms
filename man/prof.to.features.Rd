@@ -20,7 +20,7 @@ prof.to.features(
 )
 }
 \arguments{
-\item{profile}{The matrix output from proc.cdf(). It contains columns of m/z value, retention time, intensity and group number.}
+\item{profile}{The matrix output from remove_noise(). It contains columns of m/z value, retention time, intensity and group number.}
 
 \item{bandwidth}{A value between zero and one. Multiplying this value to the length of the signal along the time axis helps
 determine the bandwidth in the kernel smoother used for peak identification.}
@@ -54,7 +54,7 @@ A matrix is returned. The columns are: m/z value, retention time, spread (standa
  curve), and estimated total signal strength (total area of the estimated normal curve).
 }
 \description{
-Each LC/MS profile is first processed by the function proc.cdf() to remove noise and reduce data size. A matrix containing m/z
-value, retention time, intensity, and group number is output from proc.cdf(). This matrix is then fed to the function
+Each LC/MS profile is first processed by the function remove_noise() to remove noise and reduce data size. A matrix containing m/z
+value, retention time, intensity, and group number is output from remove_noise(). This matrix is then fed to the function
 prof.to.features() to generate a feature list. Every detected feature is summarized into a single row in the output matrix from this function.
 }

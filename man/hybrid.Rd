@@ -44,7 +44,7 @@ hybrid(
 
 \item{min_occurrence}{A feature has to show up in at least this number of profiles to be included in the final result.}
 
-\item{min_pres}{This is a parameter of the run filter, to be passed to the function proc.cdf().}
+\item{min_pres}{This is a parameter of the run filter, to be passed to the function remove_noise().}
 
 \item{min_run}{Run filter parameter. The minimum length of elution time for a series of signals grouped by m/z to be considered a peak.}
 

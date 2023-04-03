@@ -1,12 +1,12 @@
 patrick::with_parameters_test_that(
-  "test proc.cdf",
+  "test remove_noise",
   {
     if(ci_skip == TRUE) skip_on_ci()
 
     testdata <- file.path("..", "testdata")
     input_path <- file.path(testdata, "input", filename)
 
-    sut <- proc.cdf(
+    sut <- remove_noise(
       input_path,
       min_pres = min_pres,
       min_run = min_run,

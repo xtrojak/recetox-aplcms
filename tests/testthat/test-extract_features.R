@@ -22,7 +22,7 @@ patrick::with_parameters_test_that(
     register_functions_to_cluster(cluster)
     
     profiles <- snow::parLapply(cluster, filenames, function(filename) {
-        proc.cdf(
+        remove_noise(
             filename = filename,
             min_pres = min_pres,
             min_run = min_run,

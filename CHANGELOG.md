@@ -51,7 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored `adjust.time.R` [#64](https://github.com/RECETOX/recetox-aplcms/pull/64)[#102](https://github.com/RECETOX/recetox-aplcms/pull/102)
 - refactored `find.tol.time.R` [#91](https://github.com/RECETOX/recetox-aplcms/pull/91)
 - refactored `find.turn.point.R` [#91](https://github.com/RECETOX/recetox-aplcms/pull/91)
-- refactored `proc.cdf.R` and `adaptive.bin.R` [#137](https://github.com/RECETOX/recetox-aplcms/pull/137)
+- refactored `remove_noise.R` and `adaptive.bin.R` [#137](https://github.com/RECETOX/recetox-aplcms/pull/137)
 - refactored `cont.index.R` and renamed as `run_filter.R` [#156](https://github.com/RECETOX/recetox-aplcms/pull/156)
 - use proper sample IDs inside feature tables [#153](https://github.com/RECETOX/recetox-aplcms/pull/153)
 - exported functions in NAMESPACE [#154](https://github.com/RECETOX/recetox-aplcms/pull/154)

@@ -14,12 +14,12 @@ NULL
 #' @param known.table A data frame containing the known metabolite ions and previously found features.
 #' @param n.nodes The number of CPU cores to be used
 #' @param min.exp If a feature is to be included in the final feature table, it must be present in at least this number of spectra.
-#' @param min.pres This is a parameter of thr run filter, to be passed to the function proc.cdf().
-#' @param min.run This is a parameter of thr run filter, to be passed to the function proc.cdf().
+#' @param min.pres This is a parameter of thr run filter, to be passed to the function remove_noise().
+#' @param min.run This is a parameter of thr run filter, to be passed to the function remove_noise().
 #' @param mz.tol The user can provide the m/z tolerance level for peak identification. This value is expressed 
 #'  as the percentage of the m/z value. This value, multiplied by the m/z value, becomes the cutoff level.
 #' @param baseline.correct.noise.percentile The perenctile of signal strength of those EIC that don't pass the run filter, 
-#'  to be used as the baseline threshold of signal strength. This parameter is passed to proc.cdf()
+#'  to be used as the baseline threshold of signal strength. This parameter is passed to remove_noise()
 #' @param shape.model The mathematical model for the shape of a peak. There are two choices - bi-Gaussian and Gaussian. 
 #'  When the peaks are asymmetric, the bi-Gaussian is better. The default is bi-Gaussian.
 #' @param BIC.factor the factor that is multiplied on the number of parameters to modify the BIC criterion. If 
@@ -144,7 +144,7 @@ semi.sup <- function(
                 that.name<-paste(strsplit(tolower(files[j]),"\\.")[[1]][1],suf.prof,".profile",sep="_")
                 
                 processable<-"goodgood"
-                processable<-try(this.prof<-proc.cdf(files[j], min_pres=min.pres, min_run=min.run, mz_tol=mz.tol, baseline_correct=baseline.correct, baseline_correct_noise_percentile=baseline.correct.noise.percentile, do.plot=FALSE, intensity_weighted=intensity.weighted, cache=FALSE))
+                processable<-try(this.prof<-remove_noise(files[j], min_pres=min.pres, min_run=min.run, mz_tol=mz.tol, baseline_correct=baseline.correct, baseline_correct_noise_percentile=baseline.correct.noise.percentile, do.plot=FALSE, intensity_weighted=intensity.weighted, cache=FALSE))
                 if(substr(processable,1,5)=="Error")
                 {
                     file.copy(from=files[j], to="error_files")

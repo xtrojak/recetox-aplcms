@@ -636,7 +636,7 @@ refine_selection <- function(target_rt, rectangle, aligned_mz, rt_tol, mz_tol) {
 #' The default value is NA, in which case 0.5 times the retention time tolerance in the aligned object will be used.
 #' @param use_observed_range If the value is TRUE, the actual range of the observed locations
 #' of the feature in all the spectra will be used.
-#' @param mz_tol The mz.tol parameter provided to the proc.cdf() function. This helps retrieve the intermediate file.
+#' @param mz_tol The mz.tol parameter provided to the remove_noise() function. This helps retrieve the intermediate file.
 #' @param min_bandwidth The minimum bandwidth to use in the kernel smoother.
 #' @param max_bandwidth The maximum bandwidth to use in the kernel smoother.
 #' @param bandwidth A value between zero and one. Multiplying this value to the length of the signal along the
