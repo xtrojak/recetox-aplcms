@@ -4,14 +4,7 @@
 \alias{adaptive.bin}
 \title{Adaptive binning}
 \usage{
-adaptive.bin(
-  features,
-  min_run,
-  min_pres,
-  mz_tol,
-  baseline_correct,
-  intensity_weighted
-)
+adaptive.bin(features, min_run, min_pres, mz_tol, intensity_weighted)
 }
 \arguments{
 \item{features}{A tibble with columns of m/z, retention time, intensity.}
@@ -25,10 +18,6 @@ by m/z to be considered a peak.}
 \item{mz_tol}{m/z tolerance level for the grouping of data points. This value is expressed as the fraction of the m/z value. 
 This value, multiplied by the m/z value, becomes the cutoff level. The recommended value is the machine's nominal accuracy 
 level. Divide the ppm value by 1e6. For FTMS, 1e-5 is recommended.}
-
-\item{baseline_correct}{After grouping the observations, the highest intensity in each group is found. If the highest 
-is lower than this value, the entire group will be deleted. The default value is NA, in which case the program uses the 
-75th percentile of the height of the noise groups.}
 
 \item{intensity_weighted}{Whether to weight the local density by signal intensities.}
 }
