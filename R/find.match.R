@@ -1,38 +1,38 @@
+find_min_position <- function(distances) {
+    position <- which(distances == min(distances))[1]
+    position_x <- position %% nrow(distances)
+    position_x <- ifelse(position_x == 0, nrow(distances), position_x)
+    position_y <- ceiling(position / nrow(distances))
+    return(c(position_x, position_y))
+}
+
 #' Internal function: finding the best match between a set of detected features and a set of known features.
-#' 
+#'
 #' Given a small matrix of distances, find the best column-row pairing that minimize the sum of distances of the matched pairs.
-#' 
-#' @param a A matrix of distances.
-#' @param unacceptable A distance larger than which cannot be accepted as pairs.
-#' @return A matrix the same dimension as the input matrix, with matched position taking value 1, and all other positions taking value 0.
-find.match <- function(a, unacceptable) {
-    find.min.pos<-function(d)
-    {
-        pos<-which(d==min(d))[1]
-        pos.x<-pos %% nrow(d)
-        if(pos.x == 0) pos.x<-nrow(d)
-        pos.y<-floor((pos-1)/nrow(d)+1)
-        pos<-c(pos.x, pos.y)
-        return(pos)
-    }
-    
-    b<-a*0
-    if(ncol(a) == 1)
-    {
-        sel<-which(a[,1]==min(a[,1]))[1]
-        if(a[sel,1] <= unacceptable) b[sel,1]<-1
-    }else if(nrow(a)==1){
-        sel<-which(a[1,]==min(a[1,]))[1]
-        if(a[1,sel] <= unacceptable) b[1,sel]<-1
-    }else{
-        p<-find.min.pos(a)
-        while(a[p[1],p[2]] <= unacceptable)
-        {
-            b[p[1],p[2]]<-1
-            a[p[1],]<-1e10
-            a[,p[2]]<-1e10
-            p<-find.min.pos(a)
+#'
+#' @param distances A matrix of distances.
+#' @param max_distance A distance larger than which cannot be accepted as pairs.
+#' @return A binary matrix the same size as the input matrix, with matched position taking value 1, and all other positions taking value 0.
+find.match <- function(distances, max_distance) {
+    matches <- matrix(0, nrow(distances), ncol(distances))
+
+    if (ncol(distances) == 1) {
+        sel <- which(distances[, 1] == min(distances[, 1]))[1]
+        matches[sel, 1] <- as.numeric(distances[sel, 1] <= max_distance)
+    } else if (nrow(distances) == 1) {
+        sel <- which(distances[1, ] == min(distances[1, ]))[1]
+        matches[1, sel] <- as.numeric(distances[1, sel] <= max_distance)
+    } else {
+        while (TRUE) {
+            min_position <- find_min_position(distances)
+            if (distances[min_position[1], min_position[2]] > max_distance) {
+                break
+            }
+            matches[min_position[1], min_position[2]] <- 1
+            distances[min_position[1], ] <- 1e10
+            distances[, min_position[2]] <- 1e10
         }
     }
-    return(b)
+
+    return(matches)
 }
