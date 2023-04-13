@@ -1,7 +1,7 @@
 #' An internal function.
 #'
 #' This is a internal function.
-#'
+#' @description This functions computes median mz and sum of intensities over features with same rt.
 #' @param features dataframe of retention time, m/z ratio, signal strength.
 #' @return returns
 #' \itemize{
@@ -14,8 +14,8 @@ combine.seq.3 <- function(features) {
     l <- nrow(features)
     breaks <- compute_breaks_3(features$rt)
     new_table <- tibble::tibble(
-        mz = rep(0, length(breaks) - 1),
         rt = unique(features$rt),
+        mz = rep(0, length(breaks) - 1),
         intensities = rep(0, length(breaks) - 1)
     )
 
@@ -29,6 +29,5 @@ combine.seq.3 <- function(features) {
         new_table$intensities[i] <- sum(ints)
         new_table$mz[i] <- median(mz[which.max(ints)])
     }
-
     return(new_table)
 }

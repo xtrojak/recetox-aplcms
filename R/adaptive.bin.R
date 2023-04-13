@@ -82,15 +82,15 @@ adaptive.bin <- function(features,
 
   cat(c("m/z tolerance is: ", mz_tol, "\n"))
 
-  times <- sort(unique(features$rt))
+  scan_times <- sort(unique(features$rt))
 
-  min_time <- min(times)
-  max_time <- max(times)
-  time_range <- (max_time - min_time)
+  num_scans <- length(scan_times)
+  time_range <- span(scan_times)
 
   # calculate function parameters
-  min.count.run <- min_run * length(times) / time_range
-  aver.time.range <- (time_range) / length(times)
+  scans_per_second <- num_scans / time_range
+  min_scans <- min_run * scans_per_second
+  aver_cycle_time <- (time_range) / num_scans
 
   # init data
   newprof <- matrix(0, nrow = length(features$mz), ncol = 4)
@@ -110,7 +110,7 @@ adaptive.bin <- function(features,
 
     this_table <- dplyr::slice(features, (start:end))
 
-    if (length(unique(this_table$rt)) >= min.count.run * min_pres) {
+    if (length(unique(this_table$rt)) >= min_scans * min_pres) {
       # reorder in order of rt (scan number)
       this_table <- this_table |> dplyr::arrange_at("rt")
       mass.den <- compute_densities(this_table$mz, mz_tol, intensity_weighted, this_table$intensities, median)
@@ -131,39 +131,47 @@ adaptive.bin <- function(features,
         }
 
         # get rows which fulfill condition
-        that <- this_table |> dplyr::filter(mz > boundaries$lower & mz <= boundaries$upper)
+        that <- this_table |> dplyr::filter(dplyr::between(mz, boundaries$lower, boundaries$upper))
 
         if (nrow(that) > 0) {
           that <- combine.seq.3(that) |> dplyr::arrange_at("mz")
+
+          ## This should be equivalent but somehow isn't in the unsupervised test case
+          # that <- that |>
+          #  dplyr::group_by(rt) |>
+          #  dplyr::summarize(mass = median(mz[which.max(intensities)]), area = sum(intensities)) |>
+          #  dplyr::rename(mz = mass, intensities = area) |>
+          #  dplyr::arrange_at("mz")
+
           that.range <- span(that$rt)
 
-          if (that.range > 0.5 * time_range & length(that$rt) > that.range * min_pres & length(that$rt) / (that.range / aver.time.range) > min_pres) {
+          if (that.range > 0.5 * time_range & length(that$rt) > that.range * min_pres & length(that$rt) / (that.range / aver_cycle_time) > min_pres) {
             that$intensities <- rm.ridge(that$rt, that$intensities, bw = max(10 *min_run, that.range / 2))
 
             that <- that |> dplyr::filter(intensities != 0)
           }
 
-          that.n <- length(that$mz)
+          num_pts_in_group <- length(that$mz)
 
-          newprof[pointers$prof.pointer:(pointers$prof.pointer + that.n - 1), ] <- cbind(that$mz, that$rt, that$intensities, rep(pointers$curr.label, that.n))
-          height.rec[pointers$height.pointer, ] <- c(pointers$curr.label, that.n, max(that$intensities))
+          newprof[pointers$prof.pointer:(pointers$prof.pointer + num_pts_in_group - 1), ] <- cbind(that$mz, that$rt, that$intensities, rep(pointers$curr.label, num_pts_in_group))
+          height.rec[pointers$height.pointer, ] <- c(pointers$curr.label, num_pts_in_group, max(that$intensities))
 
           # increment counters
-          pointers <- increment_counter(pointers, that.n)
+          pointers <- increment_counter(pointers, num_pts_in_group)
         }
       }
-    } else {
+    } else { # not enough points in profile
       if (runif(1) < 0.05) {
         this_table <- this_table |> dplyr::arrange_at("rt")
 
         that.merged <- combine.seq.3(this_table)
-        that.n <- nrow(that.merged)
+        num_pts_in_group <- nrow(that.merged)
 
-        newprof[pointers$prof.pointer:(pointers$prof.pointer + that.n - 1), ] <- cbind(that.merged$mz, that.merged$rt, that.merged$intensities, rep(pointers$curr.label, that.n))
-        height.rec[pointers$height.pointer, ] <- c(pointers$curr.label, that.n, max(that.merged$intensities))
+        newprof[pointers$prof.pointer:(pointers$prof.pointer + num_pts_in_group - 1), ] <- cbind(that.merged$mz, that.merged$rt, that.merged$intensities, rep(pointers$curr.label, num_pts_in_group))
+        height.rec[pointers$height.pointer, ] <- c(pointers$curr.label, num_pts_in_group, max(that.merged$intensities))
 
         # increment counters
-        pointers <- increment_counter(pointers, that.n)
+        pointers <- increment_counter(pointers, num_pts_in_group)
       }
     }
   }
@@ -178,7 +186,7 @@ adaptive.bin <- function(features,
   raw.prof <- new("list")
   raw.prof$height.rec <- height.rec
   raw.prof$features <- newprof_tibble
-  raw.prof$min.count.run <- min.count.run
+  raw.prof$min.count.run <- min_scans
 
   return(raw.prof)
 }

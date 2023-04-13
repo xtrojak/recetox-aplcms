@@ -21,8 +21,8 @@ patrick::with_parameters_test_that(
     expected_path <- file.path(testdata, "filtered", paste0(.test_name, ".parquet"))
 
     # exclude last column from comparison as there lies the stochastic nature
-    expected <- arrow::read_parquet(expected_path) |> dplyr::select(-group_number)
-    actual <- sut |> dplyr::select(-group_number)
+    expected <- arrow::read_parquet(expected_path) |> dplyr::select(-group_number) |> dplyr::arrange_at(c("mz", "rt"))
+    actual <- sut |> dplyr::select(-group_number) |> dplyr::arrange_at(c("mz", "rt"))
 
     expect_equal(actual, expected)
   },

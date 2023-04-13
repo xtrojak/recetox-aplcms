@@ -11,6 +11,7 @@ load_file <- function(filename) {
 }
 
 #' Load data either from cache or load raw file and detect peaks.
+#' @description  THIS FUNCTION IS DEPRECATED!
 #' @export
 load_data <- function(filename,
                       cache,
@@ -73,14 +74,15 @@ proc.cdf <- function(filename,
                      intensity_weighted,
                      do.plot,
                      cache) {
-  raw.prof <- load_data(
-    filename,
-    cache,
-    min_run,
-    min_pres,
-    mz_tol,
-    baseline_correct,
-    intensity_weighted
+  raw.data <- load_file(filename)
+
+  raw.prof <- adaptive.bin(
+    raw.data,
+    min_run = min_run,
+    min_pres = min_pres,
+    mz_tol = mz_tol,
+    baseline_correct = baseline_correct,
+    intensity_weighted = intensity_weighted
   )
 
   newprof <- cbind(
@@ -89,6 +91,7 @@ proc.cdf <- function(filename,
     raw.prof$features$intensities,
     raw.prof$features$grps
   )
+  
   run.sel <- raw.prof$height.rec[which(raw.prof$height.rec[, 2] >= raw.prof$min.count.run * min_pres & raw.prof$height.rec[, 3] > baseline_correct), 1]
 
   newprof <- newprof[newprof[, 4] %in% run.sel, ]
