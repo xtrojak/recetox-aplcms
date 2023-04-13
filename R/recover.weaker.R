@@ -521,7 +521,7 @@ compute_rectangle <- function(data_table,
 
     # get values in RT region of interest?
     if (nrow(that) > recover_min_count) {
-      that.prof <- combine.seq.3(that)
+      that.prof <- aggregate_by_rt(that)
       that.mass <- sum(that.prof$mz * that.prof$intensities) / sum(that.prof$intensities)
       curr.rec <- c(that.mass, NA, NA)
 

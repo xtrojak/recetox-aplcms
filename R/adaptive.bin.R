@@ -134,14 +134,7 @@ adaptive.bin <- function(features,
         that <- this_table |> dplyr::filter(dplyr::between(mz, boundaries$lower, boundaries$upper))
 
         if (nrow(that) > 0) {
-          that <- combine.seq.3(that) |> dplyr::arrange_at("mz")
-
-          ## This should be equivalent but somehow isn't in the unsupervised test case
-          # that <- that |>
-          #  dplyr::group_by(rt) |>
-          #  dplyr::summarize(mass = median(mz[which.max(intensities)]), area = sum(intensities)) |>
-          #  dplyr::rename(mz = mass, intensities = area) |>
-          #  dplyr::arrange_at("mz")
+          that <- aggregate_by_rt(that) |> dplyr::arrange_at("mz")
 
           that.range <- span(that$rt)
 
@@ -164,7 +157,7 @@ adaptive.bin <- function(features,
       if (runif(1) < 0.05) {
         this_table <- this_table |> dplyr::arrange_at("rt")
 
-        that.merged <- combine.seq.3(this_table)
+        that.merged <- aggregate_by_rt(this_table)
         num_pts_in_group <- nrow(that.merged)
 
         newprof[pointers$prof.pointer:(pointers$prof.pointer + num_pts_in_group - 1), ] <- cbind(that.merged$mz, that.merged$rt, that.merged$intensities, rep(pointers$curr.label, num_pts_in_group))

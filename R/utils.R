@@ -11,7 +11,7 @@ register_functions_to_cluster <- function(cluster) {
         'find.turn.point',
         'msExtrema',
         'find_local_maxima',
-        'combine.seq.3',
+        'aggregate_by_rt',
         'run_filter',
         'interpol.area',
         'load_file',
