@@ -5,7 +5,7 @@ channels:
   - defaults
 dependencies:
   - r-base =4.2
-  - icu <=58.1
+  - icu <=70.1
   - r-mass
   - r-rgl
   - bioconductor-mzR
