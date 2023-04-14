@@ -1,5 +1,5 @@
 find_min_position <- function(distances) {
-    position <- which(distances == min(distances))[1]
+    position <- which.min(distances)[1]
     position_x <- position %% nrow(distances)
     position_x <- ifelse(position_x == 0, nrow(distances), position_x)
     position_y <- ceiling(position / nrow(distances))
@@ -17,7 +17,7 @@ find.match <- function(distances, max_distance) {
     matches <- matrix(0, nrow(distances), ncol(distances))
 
     if (ncol(distances) == 1) {
-        sel <- which(distances[, 1] == min(distances[, 1]))[1]
+        sel <- which.min(distances[, 1])[1]
         matches[sel, 1] <- as.numeric(distances[sel, 1] <= max_distance)
     } else if (nrow(distances) == 1) {
         sel <- which(distances[1, ] == min(distances[1, ]))[1]
