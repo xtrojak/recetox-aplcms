@@ -57,34 +57,23 @@ patrick::with_parameters_test_that(
 
     extracted_recovered_expected <- lapply(files, function(x) {
       xx <- file.path(testdata, "recovered", "recovered-extracted", paste0(x, ".parquet"))
-      arrow::read_parquet(xx) |> dplyr::arrange_at(keys)
+      arrow::read_parquet(xx)
     })
 
 
     corrected_recovered_expected <- lapply(files, function(x) {
       xx <- file.path(testdata, "recovered", "recovered-corrected", paste0(x, ".parquet"))
-      arrow::read_parquet(xx) |> dplyr::arrange_at(keys)
+      arrow::read_parquet(xx)
     })
-    
 
-    # compare files
-    for (i in seq_along(files)) {
-      # extracted recovered
-      actual_extracted_i <- extracted_recovered_actual[[i]]
-      expected_extracted_i <- extracted_recovered_expected[[i]]
+    expect_equal(extracted_recovered_actual, extracted_recovered_expected)
+    expect_equal(corrected_recovered_actual, corrected_recovered_expected)
 
-      expect_equal(actual_extracted_i, expected_extracted_i)
-
-      # corrected recovered
-      actual_corrected_i <- corrected_recovered_actual[[i]]
-      expected_corrected_i <- corrected_recovered_expected[[i]]
-
-      expect_equal(actual_corrected_i, expected_corrected_i)
-
-      if (store_reports) {
+    if (store_reports) {
+      for (i in seq_along(files)) {
         report_extracted <- dataCompareR::rCompare(
-          actual_extracted_i,
-          expected_extracted_i,
+          extracted_recovered_actual[[i]],
+          extracted_recovered_expected[[i]],
           keys = keys,
           roundDigits = 4,
           mismatches = 100000
@@ -97,8 +86,8 @@ patrick::with_parameters_test_that(
           mismatchCount = 10000
         )
         report_corrected <- dataCompareR::rCompare(
-          actual_corrected_i,
-          expected_corrected_i,
+          corrected_recovered_actual[[i]],
+          corrected_recovered_expected[[i]],
           keys = keys,
           roundDigits = 4,
           mismatches = 100000
