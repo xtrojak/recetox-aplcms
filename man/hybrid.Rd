@@ -53,8 +53,7 @@ This value, multiplied by the m/z value, becomes the cutoff level. The recommend
 Divide the ppm value by 1e6. For FTMS, 1e-5 is recommended.}
 
 \item{baseline_correct}{After grouping the observations, the highest intensity in each group is found. If the highest is lower than 
-this value, the entire group will be deleted. The default value is NA, in which case the program uses the 75th percentile of the 
-height of the noise groups.}
+this value, the entire group will be deleted.}
 
 \item{baseline_correct_noise_percentile}{The perenctile of signal strength of those EIC that don't pass the run filter, to be used 
 as the baseline threshold of signal strength.}
