@@ -32,7 +32,7 @@ patrick::with_parameters_test_that(
       )
     }
 
-    expect_equal(actual, expected, tolerance = 0.01)
+    expect_equal(actual, expected)
   },
   patrick::cases(
     mbr_test = list(
