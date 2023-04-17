@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [dev] - unreleased
 ### Added
 ### Changed
+- refactored adaptive.bin and combine.seq.3 [#196](https://github.com/RECETOX/recetox-aplcms/pull/196)
 - refactored find.match [#193](https://github.com/RECETOX/recetox-aplcms/pull/193)
 - Simplified Evaluation Conditions For Test Cases [#197](https://github.com/RECETOX/recetox-aplcms/pull/197)
 ### Removed
