@@ -53,8 +53,7 @@ get_sample_name <- function(filename) {
 #'  the m/z value. This value, multiplied by the m/z value, becomes the cutoff level. The recommended value is 
 #'  the machine's nominal accuracy level. Divide the ppm value by 1e6. For FTMS, 1e-5 is recommended.
 #' @param baseline_correct After grouping the observations, the highest intensity in each group is found. 
-#'  If the highest is lower than this value, the entire group will be deleted. The default value is NA, in 
-#'  which case the program uses the 75th percentile of the height of the noise groups.
+#'  If the highest is lower than this value, the entire group will be deleted.
 #' @param baseline_correct_noise_percentile The percentile of signal strength of those EIC that don't pass the 
 #'  run filter, to be used as the baseline threshold of signal strength.
 #' @param shape_model The mathematical model for the shape of a peak. There are two choices - "bi-Gaussian" and 

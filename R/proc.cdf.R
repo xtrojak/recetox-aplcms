@@ -18,7 +18,6 @@ load_data <- function(filename,
                       min_run,
                       min_pres,
                       mz_tol,
-                      baseline_correct,
                       intensity_weighted) {
   rawprof_filename <- paste(strsplit(tolower(filename), "\\.")[[1]][1], "_", min_run, "_", min_pres, "_", mz_tol, ".rawprof", sep = "")
 
@@ -31,7 +30,6 @@ load_data <- function(filename,
       min_run = min_run,
       min_pres = min_pres,
       mz_tol = mz_tol,
-      baseline_correct = baseline_correct,
       intensity_weighted = intensity_weighted
     )
   }
@@ -56,8 +54,7 @@ load_data <- function(filename,
 #'  the m/z value. This value, multiplied by the m/z value, becomes the cutoff level. The recommended value is 
 #'  the machine's nominal accuracy level. Divide the ppm value by 1e6. For FTMS, 1e-5 is recommended.
 #' @param baseline_correct After grouping the observations, the highest intensity in each group is found. If 
-#'  the highest is lower than this value, the entire group will be deleted. The default value is NA, in which 
-#'  case the program uses the 75th percentile of the height of the noise groups.
+#'  the highest is lower than this value, the entire group will be deleted.
 #' @param baseline_correct_noise_percentile The percentile of signal strength of those EIC that don't pass the 
 #'  run filter, to be used as the baseline threshold of signal strength.
 #' @param intensity_weighted Whether to use intensity to weight mass density estimation.
