@@ -324,7 +324,7 @@ semi.sup <- function(
                 
                 
                 time.matched[is.na(time.matched)]<-aligned$rt_tol_relative/2
-                both.matched<-find.match(time.matched, unacceptable=aligned$rt_tol_relative/2)
+                both.matched<-find.match(time.matched, aligned$rt_tol_relative/2)
                 
                 for(m in 1:length(sel.new))
                 {
@@ -543,7 +543,7 @@ semi.sup <- function(
             
             
             time.matched[is.na(time.matched)]<-aligned$rt_tol_relative/2-0.0000001
-            both.matched<-find.match(time.matched, unacceptable=aligned$rt_tol_relative/2)
+            both.matched<-find.match(time.matched, aligned$rt_tol_relative/2)
             
             for(m in 1:length(sel.new))
             {

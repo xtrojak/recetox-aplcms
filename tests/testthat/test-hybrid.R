@@ -25,9 +25,6 @@ patrick::with_parameters_test_that("basic hybrid test", {
   actual <- result$recovered_feature_sample_table
   keys <- c("mz", "rt", "sample", "sample_rt", "sample_intensity")
 
-  # reintroduce sample names
-  levels(actual$sample) <- sapply(files, get_sample_name)
-
   expected <- arrow::read_parquet(
     file.path(testdata, "hybrid", paste0(.test_name, "_recovered_feature_sample_table.parquet"))
   )
