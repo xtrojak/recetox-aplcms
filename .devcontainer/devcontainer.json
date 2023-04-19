@@ -32,11 +32,13 @@
 				"tianyishi.rmarkdown"
 			],
 			"settings": {
-				"r.rterm.linux": "/bin/local/miniconda/envs/recetox-aplcms-dev/bin/radian",
-				"r.rpath.linux": "/bin/local/miniconda/envs/recetox-aplcms-dev/bin/R"
+				"r.rterm.linux": "/opt/conda/envs/recetox-aplcms-dev/bin/radian",
+				"r.rpath.linux": "/opt/conda/envs/recetox-aplcms-dev/bin/R"
 			}
 		}		
 	},
-	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 &&apt-get update -y && apt-get install -y libxml2-dev && apt-get install -y libssl-dev && apt-get install -y libcurl4-openssl-dev && apt-get install -y libcgal-dev && apt-get install -y libglu1-mesa-dev && apt-get install -y wget && conda init && conda update -q conda && conda config --add channels conda-forge && conda config --add channels bioconda && conda config --set channel_priority strict && conda env create -q -f conda/environment-dev.yaml",
+	"remoteUser": "hechth",
+	"containerUser":"hechth",
+	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 &&apt-get update -y && apt-get install -y libxml2-dev && apt-get install -y libssl-dev && apt-get install -y libcurl4-openssl-dev && apt-get install -y libcgal-dev && apt-get install -y libglu1-mesa-dev && apt-get install -y wget && conda init && conda update -y conda && conda config --add channels conda-forge && conda config --add channels bioconda && conda config --set channel_priority strict && conda env create -y -f conda/environment-dev.yaml",
 	"postAttachCommand": "git config --global --add safe.directory /workspaces/recetox-aplcms && /bin/bash"
 }
