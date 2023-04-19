@@ -153,6 +153,25 @@ compute_clusters <- function(feature_tables,
 }
 
 
+compute_clusters_simple <- function(feature_tables, sample_names, mz_tol_ppm, rt_tol) {
+  all <- concatenate_feature_tables(feature_tables, sample_names) |> dplyr::arrange_at("mz")
+
+  mz_tol_rel <- mz_tol_ppm * 1e-06
+  mz_tol_abs <- all$mz * mz_tol_rel
+
+  all |>
+    dplyr::mutate(mz_group = cumsum(c(0, diff(mz)) > mz_tol_abs)) |>
+    dplyr::group_by(mz_group) |>
+    dplyr::arrange_at("rt") |>
+    dplyr::mutate(rt_group = cumsum(c(0, diff(rt)) > rt_tol)) |>
+    dplyr::group_by(mz_group, rt_group) |>
+    dplyr::mutate(cluster = cur_group_id()) |>
+    dplyr::ungroup() |>
+    dplyr::arrange_at("cluster") |>
+    dplyr::group_by(sample_id) |>
+    dplyr::group_split()
+}
+
 
 # compute_clusters_v2 <- function(feature_tables, mz_tol_ppm, rt_tol) {
 
