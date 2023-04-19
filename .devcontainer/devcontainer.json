@@ -2,42 +2,41 @@
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.217.1/containers/docker-existing-dockerfile
 {
 	"name": "recetox-aplcms-dev",
-
 	// Sets the run context to one level up instead of the .devcontainer folder.
-	"context": "..",
-
 	// Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
-	"dockerFile": "../Dockerfile",
-
+	"image": "ubuntu:20.04",
 	"features": {
-		"git": {
+		"ghcr.io/devcontainers/features/git:1": {
 			"version": "latest",
-			"ppa": false,
+			"ppa": false
 		},
-		"common": {
+		"ghcr.io/devcontainers/features/common-utils:2": {
 			"installZsh": "false",
-			"username": "false",
-		}
+			"username": "hechth"
+		},
+		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/conda:1": {}
 	},
-	
 	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"reditorsupport.r",
-		"rdebugger.r-debugger",
-		"eamodio.gitlens",
-		"mutantdino.resourcemonitor",
-		"meakbiyik.vscode-r-test-adapter",
-		"dvirtz.parquet-viewer",
-		"github.vscode-pull-request-github",
-		"ms-vsliveshare.vsliveshare",
-		"tianyishi.rmarkdown"
-	],
-	"settings": {
-		"r.rterm.linux": "/bin/local/miniconda/envs/recetox-aplcms/bin/radian",
-		"r.rpath.linux": "/bin/local/miniconda/envs/recetox-aplcms/bin/R"
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"reditorsupport.r",
+				"rdebugger.r-debugger",
+				"eamodio.gitlens",
+				"mutantdino.resourcemonitor",
+				"meakbiyik.vscode-r-test-adapter",
+				"dvirtz.parquet-viewer",
+				"github.vscode-pull-request-github",
+				"ms-vsliveshare.vsliveshare",
+				"tianyishi.rmarkdown"
+			],
+			"settings": {
+				"r.rterm.linux": "/bin/local/miniconda/envs/recetox-aplcms-dev/bin/radian",
+				"r.rpath.linux": "/bin/local/miniconda/envs/recetox-aplcms-dev/bin/R"
+			}
+		}		
 	},
-
-	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 && git config --global --add safe.directory /workspaces/recetox-aplcms",
-
-	"postAttachCommand": "/bin/bash"
+	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 &&apt-get update -y && apt-get install -y libxml2-dev && apt-get install -y libssl-dev && apt-get install -y libcurl4-openssl-dev && apt-get install -y libcgal-dev && apt-get install -y libglu1-mesa-dev && apt-get install -y wget && conda init && conda update -q conda && conda config --add channels conda-forge && conda config --add channels bioconda && conda config --set channel_priority strict && conda env create -q -f conda/environment-dev.yaml",
+	"postAttachCommand": "git config --global --add safe.directory /workspaces/recetox-aplcms && /bin/bash"
 }
