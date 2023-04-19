@@ -390,12 +390,12 @@ semisup_to_hybrid_adapter <- function(batchwise, batches_idx) {
 #' @param batch.align.rt.tol The RT tolerance for between-batch alignment.
 #' @param known.table A data frame containing the known metabolite ions and previously found features.
 #' @param cluster The number of CPU cores to be used
-#' @param min.pres This is a parameter of the run filter, to be passed to the function proc.cdf().
-#' @param min.run This is a parameter of the run filter, to be passed to the function proc.cdf().
+#' @param min.pres This is a parameter of the run filter, to be passed to the function remove_noise().
+#' @param min.run This is a parameter of the run filter, to be passed to the function remove_noise().
 #' @param mz.tol The user can provide the m/z tolerance level for peak identification. This value is expressed as the 
 #'  percentage of the m/z value. This value, multiplied by the m/z value, becomes the cutoff level.
 #' @param baseline.correct.noise.percentile The perenctile of signal strength of those EIC that don't pass the run filter, 
-#'  to be used as the baseline threshold of signal strength. This parameter is passed to proc.cdf()
+#'  to be used as the baseline threshold of signal strength. This parameter is passed to remove_noise()
 #' @param shape.model The mathematical model for the shape of a peak. There are two choices - "bi-Gaussian" and "Gaussian". 
 #'  When the peaks are asymmetric, the bi-Gaussian is better. The default is "bi-Gaussian".
 #' @param baseline.correct This is a parameter in peak detection. After grouping the observations, the highest observation 

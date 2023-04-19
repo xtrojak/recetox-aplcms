@@ -61,7 +61,7 @@ load_data <- function(filename,
 #' @param cache Whether to use cache
 #' @return A matrix with four columns: m/z value, retention time, intensity, and group number.
 #' @export
-proc.cdf <- function(filename,
+remove_noise <- function(filename,
                      min_pres,
                      min_run,
                      mz_tol,
