@@ -46,7 +46,7 @@ get_sample_name <- function(filename) {
 #' 
 #' @param filenames The CDF file names.
 #' @param min_occurrence A feature has to show up in at least this number of profiles to be included in the final result.
-#' @param min_pres This is a parameter of the run filter, to be passed to the function proc.cdf().
+#' @param min_pres This is a parameter of the run filter, to be passed to the function remove_noise().
 #' @param min_run Run filter parameter. The minimum length of elution time for a series of signals grouped by m/z 
 #'  to be considered a peak.
 #' @param mz_tol m/z tolerance level for the grouping of data points. This value is expressed as the fraction of 
@@ -134,7 +134,7 @@ unsupervised <- function(
 
   message("**** feature extraction ****")
   profiles <- snow::parLapply(cluster, filenames, function(filename) {
-      proc.cdf(
+      remove_noise(
           filename = filename,
           min_pres = min_pres,
           min_run = min_run,

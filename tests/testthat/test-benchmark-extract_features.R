@@ -25,7 +25,7 @@ patrick::with_parameters_test_that(
     res <- microbenchmark::microbenchmark(
         extract_feature = {
             profiles <- snow::parLapply(cluster, filenames, function(filename) {
-                proc.cdf(
+                remove_noise(
                     filename = filename,
                     min_pres = min_pres,
                     min_run = min_run,

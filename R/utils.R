@@ -4,7 +4,7 @@ NULL
 
 register_functions_to_cluster <- function(cluster) {
     snow::clusterExport(cluster, list(
-        'proc.cdf',
+        'remove_noise',
         'prof.to.features',
         'load.lcms',
         'adaptive.bin',

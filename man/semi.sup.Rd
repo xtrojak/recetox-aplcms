@@ -49,15 +49,15 @@ semi.sup(
 
 \item{min.exp}{If a feature is to be included in the final feature table, it must be present in at least this number of spectra.}
 
-\item{min.pres}{This is a parameter of thr run filter, to be passed to the function proc.cdf().}
+\item{min.pres}{This is a parameter of thr run filter, to be passed to the function remove_noise().}
 
-\item{min.run}{This is a parameter of thr run filter, to be passed to the function proc.cdf().}
+\item{min.run}{This is a parameter of thr run filter, to be passed to the function remove_noise().}
 
 \item{mz.tol}{The user can provide the m/z tolerance level for peak identification. This value is expressed 
 as the percentage of the m/z value. This value, multiplied by the m/z value, becomes the cutoff level.}
 
 \item{baseline.correct.noise.percentile}{The perenctile of signal strength of those EIC that don't pass the run filter, 
-to be used as the baseline threshold of signal strength. This parameter is passed to proc.cdf()}
+to be used as the baseline threshold of signal strength. This parameter is passed to remove_noise()}
 
 \item{shape.model}{The mathematical model for the shape of a peak. There are two choices - bi-Gaussian and Gaussian. 
 When the peaks are asymmetric, the bi-Gaussian is better. The default is bi-Gaussian.}

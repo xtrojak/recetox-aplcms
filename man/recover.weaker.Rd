@@ -54,7 +54,7 @@ The default value is NA, in which case 0.5 times the retention time tolerance in
 \item{use_observed_range}{If the value is TRUE, the actual range of the observed locations
 of the feature in all the spectra will be used.}
 
-\item{mz_tol}{The mz.tol parameter provided to the proc.cdf() function. This helps retrieve the intermediate file.}
+\item{mz_tol}{The mz.tol parameter provided to the remove_noise() function. This helps retrieve the intermediate file.}
 
 \item{min_bandwidth}{The minimum bandwidth to use in the kernel smoother.}
 
