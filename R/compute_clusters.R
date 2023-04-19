@@ -2,13 +2,13 @@
 #' @description
 #' Sort tibble based on sample_names
 #' @export
-sort_data <- function(sample_names, feature_tables){
+sort_data <- function(sample_names, feature_tables) {
   index <- c()
   for (i in seq_along(sample_names))
   {
-    index <-  append(index, feature_tables[[i]]$sample_id[1])
+    index <- append(index, feature_tables[[i]]$sample_id[1])
   }
-  
+
   index <- match(sample_names, index)
   feature_tables <- feature_tables[index]
 
@@ -16,7 +16,7 @@ sort_data <- function(sample_names, feature_tables){
 }
 
 #' Compute clusters of mz and rt and assign cluster id to individual features.
-#' 
+#'
 #' @description
 #' Uses tolerances to group features with mz and rt within the tolerance into clusters,
 #' creating larger features from raw data points. Custom tolerances for mz and rt are
@@ -34,7 +34,7 @@ sort_data <- function(sample_names, feature_tables){
 #'   \item feature_tables - list - Feature tables with added columns [sample_id, cluster].
 #'   \item rt_tol_relative - float - Newly determined relative rt tolerance.
 #'   \item mz_tol_relative - float - Newly determined relative mz tolerance.
-#'}
+#' }
 #' @export
 compute_clusters <- function(feature_tables,
                              mz_tol_relative,
@@ -45,7 +45,7 @@ compute_clusters <- function(feature_tables,
                              sample_names = NA) {
   number_of_samples <- length(feature_tables)
   all <- concatenate_feature_tables(feature_tables, sample_names)
-  
+
   if (is.na(mz_tol_relative)) {
     mz_tol_relative <- find.tol(
       all$mz,
@@ -74,33 +74,80 @@ compute_clusters <- function(feature_tables,
     )
   }
 
-  res <- find.tol.time(
-    all,
-    number_of_samples = number_of_samples,
-    mz_tol_relative = mz_tol_relative,
-    rt_tol_relative = rt_tol_relative,
-    aver.bin.size = 200,
-    min.bins = 50,
-    max.bins = 100,
-    mz_tol_absolute = mz_tol_absolute,
-    max.num.segments = 10000,
-    do.plot = do.plot
+  # res <- find.tol.time(
+  #   all,
+  #   number_of_samples = number_of_samples,
+  #   mz_tol_relative = mz_tol_relative,
+  #   rt_tol_relative = rt_tol_relative,
+  #   aver.bin.size = 200,
+  #   min.bins = 50,
+  #   max.bins = 100,
+  #   mz_tol_absolute = mz_tol_absolute,
+  #   max.num.segments = 10000,
+  #   do.plot = do.plot
+  # )
+
+  aver.bin.size <- 200
+  min.bins <- 50
+  max.bins <- 100
+  max.num.segments <- 10000
+
+  features <- dplyr::arrange_at(all, "mz")
+  min_mz_tol <- compute_min_mz_tolerance(
+    features$mz,
+    mz_tol_relative,
+    mz_tol_absolute
   )
 
-  rt_tol_relative <- res$rt.tol
+  mz_breaks <- compute_breaks_3(features$mz, min_mz_tol)
+  features$mz_group <- 0
 
-  message("**** performing time correction ****")
+  for (i in 2:length(mz_breaks)) {
+    subset_indices <- (mz_breaks[i - 1] + 1):mz_breaks[i]
+    features$mz_group[subset_indices] <- i
+  }
+
+  features <- features |> dplyr::arrange_at(c("mz_group", "rt"))
+
+  mz_breaks <- mz_breaks[c(-1, -length(mz_breaks))]
+
+  if (is.na(rt_tol_relative)) {
+    rt_tol_relative <- compute_rt_tol_relative(
+      mz_breaks,
+      max.num.segments,
+      aver.bin.size,
+      number_of_samples,
+      features$rt,
+      min.bins,
+      max.bins
+    )
+  }
+
+  # compute breaks in rt domain
+  rt_diffs <- diff(features$rt)
+  rt_breaks <- which(rt_diffs > rt_tol_relative)
+
+  # combine indices of all breaks in array and sort
+  all.breaks <- c(0, unique(c(mz_breaks, rt_breaks)), nrow(features))
+  all.breaks <- all.breaks[order(all.breaks)]
+
+  features$cluster <- 0
+  for (i in 2:length(all.breaks)) {
+    features$cluster[(all.breaks[i - 1] + 1):all.breaks[i]] <- i
+  }
+
   message(paste("m/z tolerance level: ", mz_tol_relative))
   message(paste("time tolerance level:", rt_tol_relative))
 
-  # Select features from individual samples, sort by mz and rt and 
+  # Select features from individual samples, sort by mz and rt and
   # return the sorted tables as individual tibbles.
-  feature_tables <- res$features |>
+  feature_tables <- features |>
+    dplyr::select(-mz_group) |>
     dplyr::group_by(sample_id) |>
     dplyr::arrange_at(c("mz", "rt")) |>
     dplyr::group_split()
-  
+
   feature_tables <- sort_data(sample_names, feature_tables)
-  
+
   return(list(feature_tables = feature_tables, rt_tol_relative = rt_tol_relative, mz_tol_relative = mz_tol_relative))
 }
