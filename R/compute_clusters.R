@@ -47,7 +47,7 @@ compute_clusters <- function(feature_tables,
   all <- concatenate_feature_tables(feature_tables, sample_names)
 
   if (is.na(mz_tol_relative)) {
-    mz_tol_relative <- find.tol(
+    mz_tol_relative <- find_mz_tolerance(
       all$mz,
       mz_max_diff = mz_max_diff,
       aver.bin.size = 4000,
