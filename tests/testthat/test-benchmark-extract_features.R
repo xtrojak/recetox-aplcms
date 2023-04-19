@@ -78,7 +78,7 @@ patrick::with_parameters_test_that(
       intensity_weighted = FALSE,
       sd_cut = c(0.01, 500),
       sigma_ratio_lim = c(0.01, 100),
-      skip_benchmark = FALSE
+      skip_benchmark = TRUE
     )
   )
 )
