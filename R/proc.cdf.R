@@ -78,7 +78,6 @@ proc.cdf <- function(filename,
     min_run = min_run,
     min_pres = min_pres,
     mz_tol = mz_tol,
-    baseline_correct = baseline_correct,
     intensity_weighted = intensity_weighted
   )
 
