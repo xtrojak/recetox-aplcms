@@ -2,6 +2,25 @@
 NULL
 #> NULL
 
+#' Compute minimum mz tolerance to use.
+#' @description
+#' Compute the minimum mz tolerance based on the relative
+#' tolerance and the mz values and the absolute tolerance.
+#' Uses midpoints between mz values for the weighting.
+#' @param mz vector Mz values to use.
+#' @param mz_tol_relative float Relative mz tolerance to use with the mz values.
+#' This forms a sort of weighted tolerance.
+#' @param mz_tol_absolute float Absolute tolerance to use independent from the mz values.
+#' @return float Minimum tolerance values to use.
+compute_min_mz_tolerance <- function(mz, mz_tol_relative, mz_tol_absolute) {
+    l <- length(mz)
+    mz_midpoints <- ((mz[2:l] + mz[1:(l - 1)]) / 2)
+    mz_ftr_relative_tolerances <- mz_tol_relative * mz_midpoints
+    min_mz_tol <- min(mz_tol_absolute, mz_ftr_relative_tolerances)
+    return(min_mz_tol)
+}
+
+
 #' An internal function that is not supposed to be directly accessed by the user. Find m/z tolerance level.
 #' 
 #' The function finds the tolerance level in m/z from a given vector of observed m/z values.
