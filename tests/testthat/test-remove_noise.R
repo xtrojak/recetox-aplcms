@@ -62,6 +62,15 @@ patrick::with_parameters_test_that(
       intensity_weighted = TRUE,
       cache = FALSE,
       ci_skip = TRUE
+    ),
+    single_eic = list(
+      filename = c("single_eic.mzml"),
+      mz_tol = 5e-05,
+      min_pres = 0.8,
+      min_run = 0.2,
+      intensity_weighted = FALSE,
+      cache = FALSE,
+      ci_skip = FALSE
     )
   )
 )
