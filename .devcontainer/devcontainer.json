@@ -11,8 +11,7 @@
 			"ppa": false
 		},
 		"ghcr.io/devcontainers/features/common-utils:2": {
-			"installZsh": "false",
-			"username": "hechth"
+			"installZsh": "false"
 		},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/devcontainers/features/conda:1": {}
@@ -37,8 +36,6 @@
 			}
 		}		
 	},
-	"remoteUser": "hechth",
-	"containerUser":"hechth",
-	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 &&apt-get update -y && apt-get install -y libxml2-dev && apt-get install -y libssl-dev && apt-get install -y libcurl4-openssl-dev && apt-get install -y libcgal-dev && apt-get install -y libglu1-mesa-dev && apt-get install -y wget && conda init && conda update -y conda && conda config --add channels conda-forge && conda config --add channels bioconda && conda config --set channel_priority strict && conda env create -y -f conda/environment-dev.yaml",
+	"onCreateCommand": "apt update && apt install -y locales && locale-gen en_US.UTF-8 && apt-get update -y && apt-get install -y libxml2-dev && apt-get install -y libssl-dev && apt-get install -y libcurl4-openssl-dev && apt-get install -y libcgal-dev && apt-get install -y libglu1-mesa-dev && apt-get install -y wget && conda init && conda update -y conda && conda config --add channels conda-forge && conda config --add channels bioconda && conda config --set channel_priority strict && conda env create -y -f conda/environment-dev.yaml",
 	"postAttachCommand": "git config --global --add safe.directory /workspaces/recetox-aplcms && /bin/bash"
 }
