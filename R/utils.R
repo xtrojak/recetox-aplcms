@@ -53,7 +53,11 @@ register_functions_to_cluster <- function(cluster) {
         "find_optima",
         "filter_based_on_density",
         "create_output",
-        "comb"
+        "comb",
+        'bigauss.esti.EM',
+        'solve.sigma',
+        'prep.uv',
+        'solve.a'
     ))
     snow::clusterEvalQ(cluster, library("dplyr"))
 }
