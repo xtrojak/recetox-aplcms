@@ -166,7 +166,7 @@ adaptive.bin <- function(features,
   }
 
   newprof <- newprof[1:(pointers$prof.pointer - 1), ]
-  height.rec <- height.rec[1:(pointers$height.pointer - 1), ]
+  height.rec <- height.rec[1:(pointers$height.pointer - 1), , drop = FALSE]
 
   newprof <- newprof[order(newprof[, 1], newprof[, 2]), ]
 

@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - refactored find.match [#193](https://github.com/RECETOX/recetox-aplcms/pull/193)
 - Simplified Evaluation Conditions For Test Cases [#197](https://github.com/RECETOX/recetox-aplcms/pull/197)
 - Renamed `proc.cdf` to `remove_noise` [#190](https://github.com/RECETOX/recetox-aplcms/pull/190)
+- Fixed dimension bug `adaptive.bin` [#200](https://github.com/RECETOX/recetox-aplcms/pull/200)
 ### Removed
 
 ## [0.10.3] - 2023-03-27
