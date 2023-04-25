@@ -68,7 +68,7 @@ test_that("compute clusters simple", {
   )
 
   actual <- actual[order(sapply(actual, function(x) x$sample_id[1]))]
-  
+
   expected <- lapply(files, function(x) {
     file <- file.path(testdata, "clusters", paste0(x, ".parquet"))
     tibble::as_tibble(arrow::read_parquet(file))

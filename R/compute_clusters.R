@@ -74,19 +74,6 @@ compute_clusters <- function(feature_tables,
     )
   }
 
-  # res <- find.tol.time(
-  #   all,
-  #   number_of_samples = number_of_samples,
-  #   mz_tol_relative = mz_tol_relative,
-  #   rt_tol_relative = rt_tol_relative,
-  #   aver.bin.size = 200,
-  #   min.bins = 50,
-  #   max.bins = 100,
-  #   mz_tol_absolute = mz_tol_absolute,
-  #   max.num.segments = 10000,
-  #   do.plot = do.plot
-  # )
-
   aver.bin.size <- 200
   min.bins <- 50
   max.bins <- 100
@@ -152,7 +139,21 @@ compute_clusters <- function(feature_tables,
   return(list(feature_tables = feature_tables, rt_tol_relative = rt_tol_relative, mz_tol_relative = mz_tol_relative))
 }
 
-
+#' Compute clusters using simple grouping based on numeric thresholds.
+#' 
+#' @describtion
+#' Features are first grouped in mz dimension based on the tolerance.
+#' First, the absolute tolerance is computed for each feature, then a new group is started
+#' once the difference between consecutive features is above this threshold.
+#' The same process is then repeated for the retention time dimension.
+#' The individual indices and then combines into a single index in the `cluster` columns.
+#' @param feature_tables list of tibbles List of feature tables coming from all samples.
+#' @param sample_names list of strings Sample names of the feature tables used to distinguish the samples.
+#' @param mz_tol_ppm float Relative tolerance for mz grouping in parts per million.
+#' @param rt_tol float Tolerance in retention time dimension [seconds].
+#' @return list of tibbles Feature tables passed initially with additional columns indicating the 
+#' mz and rt groups as well as the combined cluster index.
+#' @export
 compute_clusters_simple <- function(feature_tables, sample_names, mz_tol_ppm, rt_tol) {
   all <- concatenate_feature_tables(feature_tables, sample_names) |> dplyr::arrange_at("mz")
 
