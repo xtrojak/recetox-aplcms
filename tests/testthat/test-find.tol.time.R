@@ -1,11 +1,11 @@
 test_that("compute_rt_tol_relative computes something", {
-  aver.bin.size <- 200
-  min.bins <- 50
-  max.bins <- 100
-  max.num.segments <- 10000
-  number_of_samples <- 1
-  rt <- c(100, 101, 101.5, 101.2, 105, 108, 108.3)
-  breaks <- c(1, 5, 6)
+  aver.bin.size <- 3
+  min.bins <- 2
+  max.bins <- 10
+  max.num.segments <- 10
+  number_of_samples <- 2
+  rt <- c(0, 1, 2, 3, 3.5, 3.7, 3.9, 4, 100, 101, 101.5, 101.2, 105, 108, 108.1, 108.12, 108.3)
+  breaks <- c(1, 2, 3, 8, 13, 17)
 
   actual <- compute_rt_tol_relative(
     breaks,
@@ -17,5 +17,5 @@ test_that("compute_rt_tol_relative computes something", {
     max.bins
   )
 
-  expect_equal(actual, 0.7)
+  expect_equal(actual, 1.04166666666667)
 })
