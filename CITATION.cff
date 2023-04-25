@@ -13,6 +13,11 @@ authors:
     email: helge.hecht@recetox.muni.cz
     affiliation: 'RECETOX, Msaryk University'
     orcid: 'https://orcid.org/0000-0001-6744-996X'
+  - given-names: Zargham
+    family-names: Ahmad
+    email: zargham.ahmad@recetox.muni.cz
+    affiliation: 'RECETOX, Msaryk University'
+    orcid: "https://orcid.org/0000-0002-6096-224X"
 repository-code: 'https://github.com/RECETOX/recetox-aplcms'
 url: 'https://github.com/RECETOX/recetox-aplcms'
 abstract: >-
