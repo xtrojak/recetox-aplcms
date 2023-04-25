@@ -1,0 +1,24 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: recetox-aplcms
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Helge
+    family-names: Hecht
+    email: helge.hecht@recetox.muni.cz
+    affiliation: 'RECETOX, Msaryk University'
+    orcid: 'https://orcid.org/0000-0001-6744-996X'
+repository-code: 'https://github.com/RECETOX/recetox-aplcms'
+url: 'https://github.com/RECETOX/recetox-aplcms'
+abstract: >-
+  recetox-aplcms is a software tool for feature detection in
+  mass spectrometry data. It is based on the apLCMS package.
+license: GPL-2.0
+commit: 110f7ddc79ebd7834c088d068a66260d18d37d2d
+version: v0.10.3
+date-released: '2023-03-27'
