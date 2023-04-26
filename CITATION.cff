@@ -11,13 +11,18 @@ authors:
   - given-names: Helge
     family-names: Hecht
     email: helge.hecht@recetox.muni.cz
-    affiliation: 'RECETOX, Msaryk University'
+    affiliation: 'RECETOX, Masaryk University'
     orcid: 'https://orcid.org/0000-0001-6744-996X'
   - given-names: Zargham
     family-names: Ahmad
     email: zargham.ahmad@recetox.muni.cz
-    affiliation: 'RECETOX, Msaryk University'
+    affiliation: 'RECETOX, Masaryk University'
     orcid: "https://orcid.org/0000-0002-6096-224X"
+  - given-names: Matej
+    family-names: Troják
+    email: matej.trojak@recetox.muni.cz
+    affiliation: 'RECETOX, Masaryk University'
+    orcid: "https://orcid.org/0000-0003-0841-2707"
 repository-code: 'https://github.com/RECETOX/recetox-aplcms'
 url: 'https://github.com/RECETOX/recetox-aplcms'
 abstract: >-
