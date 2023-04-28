@@ -57,9 +57,37 @@ register_functions_to_cluster <- function(cluster) {
         'bigauss.esti.EM',
         'solve.sigma',
         'prep.uv',
-        'solve.a'
+        'solve.a',
+        'correct_time',
+        'compute_comb',
+        'compute_sel',
+        'compute_template_adjusted_rt',
+        'compute_corrected_features',
+        'fill_missing_values',
+        'recover.weaker',
+        'load_file',
+        'get_custom_rt_tol',
+        'compute_target_times',
+        'predict_mz_break_indices',
+        'compute_rectangle',
+        'get_rt_region_indices',
+        'refine_selection',
+        'duplicate.row.remove',
+        'get_times_to_use',
+        'get_single_occurrence_mask',
+        'compute_curr_rec_with_enough_peaks',
+        'compute_mu_sc_std',
+        'compute_pks_vlys_rt',
+        'count_peaks',
+        'get_features_in_rt_range',
+        'get_mzrange_bound_indices',
+        'compute_mass_density',
+        'l2normalize',
+        'compute_peaks_and_valleys'
     ))
     snow::clusterEvalQ(cluster, library("dplyr"))
+    snow::clusterEvalQ(cluster, library("stringr"))
+    snow::clusterEvalQ(cluster, library("tidyselect"))
 }
 
 #' Concatenate multiple feature lists and add the sample id (origin of feature) as additional column.

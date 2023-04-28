@@ -134,11 +134,13 @@ create_aligned_feature_table <- function(features_table,
     if (!is(cluster, "cluster")) {
         cluster <- parallel::makeCluster(cluster)
         on.exit(parallel::stopCluster(cluster))
+        
+        # NOTE: side effect (doParallel has no functionality to clean up)
+        doParallel::registerDoParallel(cluster)
+        register_functions_to_cluster(cluster)
     }
 
-    # NOTE: side effect (doParallel has no functionality to clean up)
-    doParallel::registerDoParallel(cluster)
-    register_functions_to_cluster(cluster)
+
 
     number_of_samples <- length(sample_names)
     metadata_colnames <- c("id", "mz", "mzmin", "mzmax", "rt", "rtmin", "rtmax", "npeaks", sample_names)
