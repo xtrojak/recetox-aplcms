@@ -556,7 +556,7 @@ compute_rectangle <- function(data_table,
       } else {
         rt_intensities <- dplyr::select(
           that.prof,
-          c("rt", "intensities")
+          all_of(c("rt", "intensities"))
         ) |> dplyr::arrange_at("rt")
         bw <- min(max(bandwidth * (span(rt_intensities$rt)), min_bandwidth), max_bandwidth)
 
@@ -684,8 +684,8 @@ recover.weaker <- function(filename,
   vec_delta_rt <- compute_delta_rt(times)
 
   sample_intensities <- unlist(dplyr::select(
-    intensity_table %>% dplyr::rename_with(~ str_remove(., "_intensity")),
-    sample_name
+    intensity_table %>% dplyr::rename_with(~str_remove(., "_intensity")),
+    all_of(sample_name)
   ), use.names = FALSE)
 
   custom.mz.tol <- recover_mz_range * metadata_table$mz
