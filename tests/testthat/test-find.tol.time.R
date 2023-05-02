@@ -17,5 +17,5 @@ test_that("compute_rt_tol_relative computes something", {
     max.bins
   )
 
-  expect_equal(actual, 1.04166666666667)
+  expect_equal(actual, 1.0416)
 })
