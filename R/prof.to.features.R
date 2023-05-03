@@ -102,7 +102,7 @@ compute_gaussian_peak_shape <- function(rt_profile, bw, component_eliminate, BIC
 #' @param sigma.1 left standard deviation of the gaussian curve
 #' @param sigma.2 right standard deviation of the gaussian curve
 #' @export
-solve.a <- function(x, t, a, sigma.1, sigma.2) {
+solve_a <- function(x, t, a, sigma.1, sigma.2) {
   # This function is a part of bigauss.esti.EM and is not covered by any of test-cases
   w <- x * (as.numeric(t < a) / sigma.1 + as.numeric(t >= a) / sigma.2)
   return(sum(t * w) / sum(w))
@@ -115,7 +115,7 @@ solve.a <- function(x, t, a, sigma.1, sigma.2) {
 #' @param t A vector of numerical values (rt).
 #' @param a A vector of peak summits.
 #' @export
-prep.uv <- function(x, t, a) {
+prep_uv <- function(x, t, a) {
   # This function is a part of bigauss.esti.EM and is not covered by any of test-cases
   temp <- (t - a)^2 * x
   u <- sum(temp * as.numeric(t < a))
@@ -138,9 +138,9 @@ prep.uv <- function(x, t, a) {
 #'   \item standard deviation at the right side of the gaussian curve
 #' }
 #' @export
-solve.sigma <- function(x, t, a) {
+solve_sigma <- function(x, t, a) {
   # This function is a part of bigauss.esti.EM and is not covered by any of test-cases
-  tt <- prep.uv(x, t, a)
+  tt <- prep_uv(x, t, a)
   sigma.1 <- tt$u / tt$x.sum * ((tt$v / tt$u)^(1 / 3) + 1)
   sigma.2 <- tt$v / tt$x.sum * ((tt$u / tt$v)^(1 / 3) + 1)
   return(list(
@@ -192,11 +192,11 @@ bigauss.esti.EM <- function(t, x, max.iter = 50, epsilon = 0.005, do.plot = FALS
   while ((change > epsilon) & (n.iter < max.iter)) {
     a.old <- a.new
     n.iter <- n.iter + 1
-    sigma <- solve.sigma(x, t, a.old)
+    sigma <- solve_sigma(x, t, a.old)
     if (n.iter == 1) {
         sigma[is.na(sigma)] <- as.numeric(sigma[which(!is.na(sigma))])[1] / 10
     }
-    a.new <- solve.a(x, t, a.old, sigma$sigma.1, sigma$sigma.2)
+    a.new <- solve_a(x, t, a.old, sigma$sigma.1, sigma$sigma.2)
     change <- abs(a.old - a.new)
   }
   d <- x

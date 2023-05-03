@@ -2,6 +2,7 @@
 NULL
 #> NULL
 
+#' @export
 compute_comb <- function(template_features, features) {
   combined <- dplyr::bind_rows(
     template_features,
@@ -11,6 +12,7 @@ compute_comb <- function(template_features, features) {
   return(combined)
 }
 
+#' @export
 compute_sel <- function(combined, mz_tol_relative, rt_tol_relative) {
   l <- nrow(combined)
   sel <- which(combined$mz[2:l] - combined$mz[1:(l - 1)] <
@@ -20,6 +22,7 @@ compute_sel <- function(combined, mz_tol_relative, rt_tol_relative) {
   return(sel)
 }
 
+#' @export
 compute_template_adjusted_rt <- function(combined, sel, j) {
   all_features <- cbind(combined$rt[sel], combined$rt[sel + 1])
   flip_indices <- which(combined$sample_id[sel] == j)
@@ -34,6 +37,7 @@ compute_template_adjusted_rt <- function(combined, sel, j) {
   return(all_features)
 }
 
+#' @export
 compute_corrected_features <- function(features, delta_rt, avg_time) {
   features <- features[order(features$rt, features$mz), ]
   corrected <- features$rt
@@ -58,6 +62,7 @@ compute_corrected_features <- function(features, delta_rt, avg_time) {
   return(features)
 }
 
+#' @export
 fill_missing_values <- function(orig.feature, this.feature) {
   missing_values <- which(is.na(this.feature$rt))
   for (i in missing_values) {
