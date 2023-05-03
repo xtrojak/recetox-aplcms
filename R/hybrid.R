@@ -390,7 +390,7 @@ hybrid <- function(
 
 
   message("**** time correction ****")
-  corrected <- foreach::foreach(this.feature = extracted_clusters$feature_tables) %do% correct_time(
+  corrected <- foreach::foreach(this.feature = extracted_clusters$feature_tables) %dopar% correct_time(
     this.feature,
     template_features,
     extracted_clusters$mz_tol_relative,
@@ -429,7 +429,7 @@ hybrid <- function(
   )
   
   message("**** weaker signal recovery ****")
-  recovered <- lapply(seq_along(filenames), function(i) {
+  recovered <- snow::parLapply(cluster, seq_along(filenames), function(i) {
     recover.weaker(
       filename = filenames[[i]],
       sample_name = sample_names[i],
@@ -470,7 +470,7 @@ hybrid <- function(
 
 
   message("**** second time correction ****")
-  corrected <- foreach::foreach(this.feature = recovered_clusters$feature_tables) %do% correct_time(
+  corrected <- foreach::foreach(this.feature = recovered_clusters$feature_tables) %dopar% correct_time(
     this.feature,
     template_features,
     recovered_clusters$mz_tol_relative,

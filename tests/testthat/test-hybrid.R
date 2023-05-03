@@ -30,21 +30,21 @@ patrick::with_parameters_test_that("basic hybrid test", {
   )
 
   if (store_reports) {
-  report <- dataCompareR::rCompare(
-    actual,
-    expected,
-    keys = keys,
-    roundDigits = 3,
-    mismatches = 100000
-  )
-  dataCompareR::saveReport(
-    report,
-    reportName = paste0(.test_name, "_hybrid_report"),
-    showInViewer = FALSE,
-    HTMLReport = FALSE,
-    mismatchCount = 10000
-  )
-}
+    report <- dataCompareR::rCompare(
+      actual,
+      expected,
+      keys = keys,
+      roundDigits = 3,
+      mismatches = 100000
+    )
+    dataCompareR::saveReport(
+      report,
+      reportName = paste0(.test_name, "_hybrid_report"),
+      showInViewer = FALSE,
+      HTMLReport = FALSE,
+      mismatchCount = 10000
+    )
+  }
 
   expect_equal(actual, expected)
 },

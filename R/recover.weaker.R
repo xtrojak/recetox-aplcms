@@ -58,6 +58,7 @@ compute_delta_rt <- function(times) {
 #' @description x / sum(x)
 #' @param x Data to normalize.
 #' @return Normalized data.
+#' @export
 l2normalize <- function(x) {
   x / sum(x)
 }
@@ -157,6 +158,7 @@ compute_target_times <- function(aligned_rts,
 #' checks which values only occur a single time.
 #' @param values vector Values for which to compute the mask.
 #' @return vector Boolean vector which is the mask of values occuring only once.
+#' @export
 get_single_occurrence_mask <- function(values) {
   ttt <- table(values)
   mask <- values %in% as.numeric(names(ttt)[ttt == 1])
@@ -275,6 +277,7 @@ get_rt_region_indices <- function(target_time, features, rt_tol) {
 #'   \item pks - vector - The data points at which the density peaks.
 #'   \item vlys - vector - The points in the data where the density is low
 #'                         (forming a valley in the function).
+#' @export
 get_features_in_rt_range <- function(features, times, bw) {
   time_curve <- times[between(times, min(features$rt), max(features$rt))]
 
@@ -297,6 +300,7 @@ get_features_in_rt_range <- function(features, times, bw) {
 #' @param roi list Named list with vectors `pks` and `vlys`.
 #' @param times vector Retention time values
 #' @return vector Numbers of peaks within each region defined by a peak and the two valley points.
+#' @export
 count_peaks <- function(roi, times) {
   num_peaks <- rep(0, length(roi$pks))
 
@@ -319,6 +323,7 @@ count_peaks <- function(roi, times) {
 #'   \item pks - vector - The data points at which the density peaks with at least `recover_min_count` peaks between the valley points.
 #'   \item vlys - vector - The points in the data where the density is low
 #'                         (forming a valley in the function).
+#' @export
 compute_pks_vlys_rt <- function(features, times, bandwidth, target_rt, recover_min_count) {
   roi <- get_features_in_rt_range(
     features,
@@ -383,6 +388,7 @@ compute_mu_sc_std <- function(features, aver_diff) {
 #' @param delta_rt vector Differences between consecutive retention time values (diff(times)).
 #' @importFrom dplyr between
 #' @return list Triplet of mz, label and intensity for the feature.
+#' @export
 compute_curr_rec_with_enough_peaks <- function(mz,
                                                peak,
                                                valleys,
@@ -448,6 +454,7 @@ compute_boundaries <- function(valley_points, peak) {
 #'   \item vlys - vector - The points in the data where the density is low
 #'                         (forming a valley in the function).
 #' }
+#' @export
 compute_peaks_and_valleys <- function(dens) {
   turns <- find.turn.point(dens$y)
   pks <- dens$x[turns$pks] # mz values with highest density
@@ -474,6 +481,7 @@ compute_peaks_and_valleys <- function(dens) {
 #' @param min_bandwidth float Minimum bandwidth to use.
 #' @param max_bandwidth float Maximum bandwidth to use.
 #' @return tibble Tibble with `mz`, `rt` and `intensities` columns.
+#' @export 
 compute_rectangle <- function(data_table,
                               aligned_feature_mz,
                               breaks,
@@ -556,7 +564,7 @@ compute_rectangle <- function(data_table,
       } else {
         rt_intensities <- dplyr::select(
           that.prof,
-          c("rt", "intensities")
+          all_of(c("rt", "intensities"))
         ) |> dplyr::arrange_at("rt")
         bw <- min(max(bandwidth * (span(rt_intensities$rt)), min_bandwidth), max_bandwidth)
 
@@ -602,6 +610,7 @@ compute_rectangle <- function(data_table,
 #' @param rt_tol float Retention time tolerance.
 #' @param mz_tol float Mz tolerance to use.
 #' @return int Index of value in rectable closest to `target_rt` and `aligned_mz`.
+#' @export
 refine_selection <- function(target_rt, rectangle, aligned_mz, rt_tol, mz_tol) {
   if (!is.na(target_rt)) {
     rt_term <- (rectangle$rt - target_rt)^2 / rt_tol^2
@@ -684,8 +693,8 @@ recover.weaker <- function(filename,
   vec_delta_rt <- compute_delta_rt(times)
 
   sample_intensities <- unlist(dplyr::select(
-    intensity_table %>% dplyr::rename_with(~ str_remove(., "_intensity")),
-    sample_name
+    intensity_table %>% dplyr::rename_with(~str_remove(., "_intensity")),
+    all_of(sample_name)
   ), use.names = FALSE)
 
   custom.mz.tol <- recover_mz_range * metadata_table$mz

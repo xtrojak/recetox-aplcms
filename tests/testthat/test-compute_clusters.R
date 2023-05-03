@@ -51,3 +51,30 @@ patrick::with_parameters_test_that(
     )
   )
 )
+
+test_that("compute clusters simple", {
+  testdata <- file.path("..", "testdata")
+  files <- c("8_qc_no_dil_milliq", "21_qc_no_dil_milliq", "29_qc_no_dil_milliq")
+
+  extracted <- lapply(files, function(x) {
+    xx <- file.path(testdata, "extracted", paste0(x, ".mzml.parquet"))
+    tibble::as_tibble(arrow::read_parquet(xx))
+  })
+  actual <- compute_clusters_simple(
+    feature_tables = extracted,
+    sample_names = files,
+    mz_tol_ppm = 10,
+    rt_tol = 2
+  )
+
+  actual <- actual[order(sapply(actual, function(x) x$sample_id[1]))]
+
+  expected <- lapply(files, function(x) {
+    file <- file.path(testdata, "clusters", paste0(x, ".parquet"))
+    tibble::as_tibble(arrow::read_parquet(file))
+  })
+
+  expected <- expected[order(sapply(expected, function(x) x$sample_id[1]))]
+
+  expect_equal(as.list(actual), expected, tolerance = 0.02)
+})

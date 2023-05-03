@@ -32,7 +32,7 @@ the machine's nominal accuracy level. Divide the ppm value by 1e6. For FTMS, 1e-
 \item{baseline_correct}{After grouping the observations, the highest intensity in each group is found. If 
 the highest is lower than this value, the entire group will be deleted.}
 
-\item{baseline_correct_noise_percentile}{The percentile of signal strength of those EIC that don't pass the 
+\item{baseline_correct_noise_percentile}{Only used for plotting. The percentile of signal strength of those EIC that don't pass the 
 run filter, to be used as the baseline threshold of signal strength.}
 
 \item{intensity_weighted}{Whether to use intensity to weight mass density estimation.}

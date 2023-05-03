@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev] - unreleased
 ### Added
+ - implemented new clustrering algorithm and included parallelism in unsupervised and hybrid [#201](https://github.com/RECETOX/recetox-aplcms/pull/201)
 ### Changed
 - refactored adaptive.bin and combine.seq.3 [#196](https://github.com/RECETOX/recetox-aplcms/pull/196)
 - refactored find.match [#193](https://github.com/RECETOX/recetox-aplcms/pull/193)

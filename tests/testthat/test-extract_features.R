@@ -2,7 +2,7 @@ patrick::with_parameters_test_that(
   "extract single feature works",
   {
     skip_on_ci()
-    if (full_testdata) {
+    if (skip_tests) {
       skip("skipping whole data test case")
     }
 
@@ -44,7 +44,7 @@ patrick::with_parameters_test_that(
             sd_cut = sd_cut,
             sigma_ratio_lim = sigma_ratio_lim,
             shape_model = "bi-Gaussian",
-            peak_estim_method = "moment",
+            peak_estim_method = peak_estim_method,
             component_eliminate = 0.01,
             moment_power = 1,
             BIC_factor = 2.0,
@@ -69,18 +69,20 @@ patrick::with_parameters_test_that(
       intensity_weighted = FALSE,
       sd_cut = c(0.01, 500),
       sigma_ratio_lim = c(0.01, 100),
-      full_testdata = FALSE
+      peak_estim_method = "moment",
+      skip_tests = FALSE
     ),
     qc_no_dil_milliq = list(
       files = c("8_qc_no_dil_milliq.mzml", "21_qc_no_dil_milliq.mzml", "29_qc_no_dil_milliq.mzml"),
-      expected_files = c("8_qc_no_dil_milliq.parquet", "21_qc_no_dil_milliq.parquet", "29_qc_no_dil_milliq.parquet"),
-      mz_tol = 1e-05,
-      min_pres = 0.5,
-      min_run = 12,
+      expected_files = c("8_qc_no_dil_milliq.mzml.parquet", "21_qc_no_dil_milliq.mzml.parquet", "29_qc_no_dil_milliq.mzml.parquet"),
+      mz_tol = 5e-05,
+      min_pres = 0.7,
+      min_run = 0.5,
       intensity_weighted = FALSE,
-      sd_cut = c(0.01, 500),
-      sigma_ratio_lim = c(0.01, 100),
-      full_testdata = TRUE
+      sd_cut = c(0.05, 10),
+      sigma_ratio_lim = c(0, Inf),
+      peak_estim_method = "EM",
+      skip_tests = TRUE
     )
   )
 )
