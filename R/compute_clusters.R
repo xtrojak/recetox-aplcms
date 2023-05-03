@@ -146,7 +146,7 @@ compute_clusters <- function(feature_tables,
 #' First, the absolute tolerance is computed for each feature, then a new group is started
 #' once the difference between consecutive features is above this threshold.
 #' The same process is then repeated for the retention time dimension.
-#' The individual indices and then combines into a single index in the `cluster` columns.
+#' The individual indices are then combined into a single index in the `cluster` columns.
 #' @param feature_tables list of tibbles List of feature tables coming from all samples.
 #' @param sample_names list of strings Sample names of the feature tables used to distinguish the samples.
 #' @param mz_tol_ppm float Relative tolerance for mz grouping in parts per million.
