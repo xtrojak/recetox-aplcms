@@ -19,7 +19,6 @@ dependencies:
   - r-tidyr
   - r-stringr
   - r-tibble
-  # - r-pkgload <=1.2.4
   - r-devtools 
   - r-languageserver
   - r-jsonlite
